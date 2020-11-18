@@ -54,11 +54,11 @@ def update_output(filenames, time_select):
         filenames=[filenames]
     if time_select == 'hourly':
         df = group_data.get_hourly(filenames, True)
-    if time_select == 'daily':
+    elif time_select == 'daily':
         df = group_data.get_hourly(filenames, True)
-    if time_select == 'weekly':
+    elif time_select == 'weekly':
         df = group_data.get_hourly(filenames, True)
-    if time_select == 'monthly':
+    else:
         df = group_data.get_hourly(filenames, True)
     fig = px.line(df)
     fig.update_layout(
