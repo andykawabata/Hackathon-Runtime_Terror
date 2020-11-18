@@ -23,9 +23,20 @@ for i in range(0, len(names)):
     locations.append({'label': labels[i], 'value': names[i]})
 
 app.layout = html.Div(style={'margin': '0  300px' }, children=[
+    dcc.RadioItems(
+                id='time-select',
+                options=[
+                    {'label': 'Hourly', 'value': 'hourly'},
+                    {'label': 'Daily', 'value': 'daily'},
+                    {'label': 'Weekly', 'value': 'weekly'},
+                    {'label': 'Monthly', 'value': 'monthly'}
+                ],
+                value='hourly',
+                labelStyle={'display': 'inline-block'}
+            ),
     html.Div(id='dd-output-container', children=[]),
     dcc.Dropdown(
-        id='dropdown',
+        id='building-names',
         options=locations,
         value=names[0],
         multi=True
@@ -34,12 +45,21 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
 
 @app.callback(
     dash.dependencies.Output('dd-output-container', 'children'),
-    [dash.dependencies.Input('dropdown', 'value')])
-def update_output(filenames):
+    [dash.dependencies.Input('building-names', 'value'),
+     dash.dependencies.Input('time-select', 'value')])
+def update_output(filenames, time_select):
     #THIS FUNCTION IS CALLED WHEN THE SELECTION BOX INPUT CHANGES
+    df = None
     if(isinstance(filenames,str)):
         filenames=[filenames]
-    df = group_data.get_hourly(filenames, True)
+    if time_select == 'hourly':
+        df = group_data.get_hourly(filenames, True)
+    if time_select == 'daily':
+        df = group_data.get_hourly(filenames, True)
+    if time_select == 'weekly':
+        df = group_data.get_hourly(filenames, True)
+    if time_select == 'monthly':
+        df = group_data.get_hourly(filenames, True)
     fig = px.line(df)
     fig.update_layout(
         xaxis=dict(
