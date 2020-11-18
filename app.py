@@ -8,6 +8,7 @@ import pandas as pd
 import plotly.express as px
 from classes.read_csv import Data
 from classes.group_data import group_data
+from classes.predictive_plot import PredictivePlot
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -17,6 +18,8 @@ reader = Data()
 names = reader.get_all_file_names()
 labels = [filename.split('_')[0] for filename in names]
 locations = []
+
+predictive_graph = PredictivePlot(names[0])
 
 #BUILD LABELS AND VALUES FOR BUILDING SELECTION DROPDOWN
 for i in range(0, len(names)):
@@ -40,7 +43,8 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
         options=locations,
         value=names[0],
         multi=True
-    )
+    ),
+    predictive_graph.create_graph()
 ])
 
 @app.callback(

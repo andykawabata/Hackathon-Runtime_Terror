@@ -27,6 +27,15 @@ class Data:
                 dfs.append(df)
         return dfs
 
+    # Return dataframe for specific file
+    def get_df_for_file(self, filename):
+        for file in glob.glob(self.path):
+            file_local = file.split("\\")[-1]
+            if filename[0] in str(file):
+                df = pd.read_csv(file)
+                return df
+        return None
+
     # Return dataframes for all files in data folder
     def get_dfs_for_all_files(self):
         dfs = []
