@@ -53,6 +53,13 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
     [dash.dependencies.Input('building-names', 'value'),
      dash.dependencies.Input('time-select', 'value')])
 def update_output(filenames, time_select):
+    """
+    This callback fires when the building-names dropdown, and time period
+    selection fields are changed in the view
+    :param filenames: names of files to be rendered into graphs
+    :param time_select: hourly, daily, weekly, monthly
+    :return: a single of multi-line graph based on the inputs
+    """
     graph = ActualPlot.build_graph(filenames, time_select)
     return graph
 
