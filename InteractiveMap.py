@@ -15,10 +15,11 @@ df_geography = pd.read_csv("./data/geography/geography_data.csv")
 
 df_geography.latitude = df_geography.latitude.apply(lambda x: ast.literal_eval(x))
 df_geography.longitude = df_geography.longitude.apply(lambda x: ast.literal_eval(x))
-for index, row  in df_geography.iterrows():
+for index, row  in df_geography[:1].iterrows():
     figure.add_trace(go.Scattermapbox(mode = "lines",
                                       fill = "toself",
                                       fillcolor = "#ffb71b",
+
                                       lat = row["latitude"],
                                       lon = row["longitude"],
                                       marker = {"size" : 10,
@@ -33,7 +34,7 @@ for index, row  in df_geography.iterrows():
                                                     },
                                       #customdata =,
                                       hovertemplate = "{}".format(row["name"]),
-                                      )
+                                      ),
                      )
 
 
@@ -56,10 +57,19 @@ app.layout = html.Div([
                   figure = figure,
                   config = plotly_configuration,
                   ),
+        html.Div(id="out")
         ]
     )
 
+@app.callback(
+    dash.dependencies.Output('out', 'children'),
+    [dash.dependencies.Input('graph_map_layout', 'hoverData')])
+def update_output(hoverData):
+    print(hoverData)
+    return hoverData
+
+
 def main():
-    #app.run_server(debug=True)
-    app.run_server(host = "0.0.0.0")
+    app.run_server(debug=True)
+    #app.run_server(host = "0.0.0.0")
 main()
