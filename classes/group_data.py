@@ -1,5 +1,6 @@
 import pandas as pd
 
+from classes.label_mapper import LabelMapper
 
 class GroupData:
 
@@ -8,12 +9,13 @@ class GroupData:
 
     @staticmethod
     def get_hourly(filenames):
+        label_map = LabelMapper.map_to_dictionary()
         base_path = './data/Analysis/'
         merged = pd.DataFrame()
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
             df = df[['Datetime', 'Actual']]
-            df = df.rename(columns={"Actual": filenames[i]})
+            df = df.rename(columns={"Actual": label_map[filenames[i]]})
             if merged.empty:
                 merged = df
                 continue
@@ -23,12 +25,13 @@ class GroupData:
 
     @staticmethod
     def get_daily(filenames, is_total):
+        label_map = LabelMapper.map_to_dictionary()
         merged = pd.DataFrame()
         base_path = './data/Analysis/'
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
             df = df[['Datetime', 'Actual']]
-            df = df.rename(columns={"Actual": filenames[i]})
+            df = df.rename(columns={"Actual": label_map[filenames[i]]})
             if merged.empty:
                 merged = df
                 continue
