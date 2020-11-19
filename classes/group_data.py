@@ -47,11 +47,27 @@ class GroupData:
 
     @staticmethod
     def get_weekly(filenames, is_total):
-        # filename: array of strings for example [CurrBldg_results.csv, Graham_results.csv]
-        # is_total: boolean specifying if the weekly averages or weekly totals should be calculated
-        # returns: Pandas data frame where the index is time and the columns are the 'Actual'
-        # energy use value. ideally the name of the column should be the building name.
-        return
+        merged = pd.DataFrame()
+        base_path = './data/Analysis/'
+        for i in range(0, len(filenames)):
+            df = pd.read_csv(base_path + filenames[i])
+            df = df[['Datetime', 'Actual']]
+            df = df.rename(columns={"Actual": filenames[i]})
+            if merged.empty:
+                merged = df
+                continue
+            merged = pd.merge(merged, df, on="Datetime")
+
+        merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
+        merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
+        merged['Week'] = merged['Datetime'].dt.to_period(freq = 'W').apply(lambda r: r.start_time)
+        grouped = merged.groupby('Week')
+        if is_total:
+            weekly = grouped.sum()
+        else:
+            weekly = grouped.mean()
+        weekly.index = weekly.index.astype('str')
+        return weekly
 
     @staticmethod
     def get_monthly(filenames, type):
