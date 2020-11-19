@@ -60,7 +60,7 @@ class GroupData:
 
         merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
         merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
-        merged['Week'] = merged['Datetime'].dt.to_period(freq = 'W-SUN')
+        merged['Week'] = merged['Datetime'].dt.to_period(freq = 'W').apply(lambda r: r.start_time)
         grouped = merged.groupby('Week')
         if is_total:
             weekly = grouped.sum()
