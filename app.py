@@ -9,21 +9,20 @@ import plotly.express as px
 from classes.read_csv import Data
 from classes.predictive_plot import PredictivePlot
 from classes.actual_plot import ActualPlot
+from classes.label_mapper import LabelMapper
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-reader = Data()
-names = reader.get_all_file_names()
-labels = [filename.split('_')[0] for filename in names]
+filenames_labels = LabelMapper.map_to_array()
 locations = []
 
-predictive_graph = PredictivePlot(names[0])
+predictive_graph = PredictivePlot(filenames_labels[0]['filename'])
 
-#BUILD LABELS AND VALUES FOR BUILDING SELECTION DROPDOWN
-for i in range(0, len(names)):
-    locations.append({'label': labels[i], 'value': names[i]})
+# BUILD LABELS AND VALUES FOR BUILDING SELECTION DROPDOWN
+for pair in filenames_labels:
+    locations.append({'label': pair['label'], 'value': pair['filename']})
 
 app.layout = html.Div(style={'margin': '0  300px' }, children=[
     dcc.RadioItems(
@@ -41,7 +40,7 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
     dcc.Dropdown(
         id='building-names',
         options=locations,
-        value=names[0],
+        value=filenames_labels[0]['filename'],
         multi=True
     ),
     predictive_graph.create_graph()
@@ -53,6 +52,14 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
     [dash.dependencies.Input('building-names', 'value'),
      dash.dependencies.Input('time-select', 'value')])
 def update_output(filenames, time_select):
+    """
+    This callback fires when the building-names dropdown, and time period
+    selection fields are changed in the view
+    :param filenames: names of files to be rendered into graphs
+    :param labels: labels associated with filename
+    :param time_select: hourly, daily, weekly, monthly
+    :return: a single of multi-line graph based on the inputs
+    """
     graph = ActualPlot.build_graph(filenames, time_select)
     return graph
 
