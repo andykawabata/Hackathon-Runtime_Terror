@@ -1,24 +1,49 @@
 import pandas as pd
 
-class group_data:
+
+class GroupData:
+
+    def __init__(self):
+        return
 
     @staticmethod
-    def get_hourly(filenames, is_total):
+    def get_hourly(filenames):
         base_path = './data/Analysis/'
-        merged = pd.read_csv(base_path + filenames[0])
-        merged = merged[['Datetime', 'Actual']]
-        merged = merged.rename(columns={"Actual": filenames[0]})
-        for i in range(1, len(filenames)):
+        merged = pd.DataFrame()
+        for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
-            cols = df[['Datetime', 'Actual']]
-            cols = cols.rename(columns={"Actual": filenames[i]})
-            merged = pd.merge(merged, cols, on="Datetime")
+            df = df[['Datetime', 'Actual']]
+            df = df.rename(columns={"Actual": filenames[i]})
+            if merged.empty:
+                merged = df
+                continue
+            merged = pd.merge(merged, df, on="Datetime")
         merged = merged.set_index('Datetime')
         return merged
 
     @staticmethod
     def get_daily(filenames, is_total):
-        return
+        merged = pd.DataFrame()
+        base_path = './data/Analysis/'
+        for i in range(0, len(filenames)):
+            df = pd.read_csv(base_path + filenames[i])
+            df = df[['Datetime', 'Actual']]
+            df = df.rename(columns={"Actual": filenames[i]})
+            if merged.empty:
+                merged = df
+                continue
+            merged = pd.merge(merged, df, on="Datetime")
+
+        merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
+        merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
+        merged['Day'] = merged['Datetime'].dt.to_period("D")
+        grouped = merged.groupby('Day')
+        if is_total:
+            daily = grouped.sum()
+        else:
+            daily = grouped.mean()
+        daily.index = daily.index.astype('str')
+        return daily
 
     @staticmethod
     def get_weekly(filenames, is_total):

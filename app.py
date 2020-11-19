@@ -7,8 +7,8 @@ import dash_html_components as html
 import pandas as pd
 import plotly.express as px
 from classes.read_csv import Data
-from classes.group_data import group_data
 from classes.predictive_plot import PredictivePlot
+from classes.actual_plot import ActualPlot
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -34,10 +34,10 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
                     {'label': 'Weekly', 'value': 'weekly'},
                     {'label': 'Monthly', 'value': 'monthly'}
                 ],
-                value='hourly',
+                value='daily',
                 labelStyle={'display': 'inline-block'}
             ),
-    html.Div(id='dd-output-container', children=[]),
+    html.Div(id='actual-graph-container', children=[]),
     dcc.Dropdown(
         id='building-names',
         options=locations,
@@ -47,56 +47,13 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
     predictive_graph.create_graph()
 ])
 
+
 @app.callback(
-    dash.dependencies.Output('dd-output-container', 'children'),
+    dash.dependencies.Output('actual-graph-container', 'children'),
     [dash.dependencies.Input('building-names', 'value'),
      dash.dependencies.Input('time-select', 'value')])
 def update_output(filenames, time_select):
-    #THIS FUNCTION IS CALLED WHEN THE SELECTION BOX INPUT CHANGES
-    df = None
-    if(isinstance(filenames,str)):
-        filenames=[filenames]
-    if time_select == 'hourly':
-        df = group_data.get_hourly(filenames, True)
-    elif time_select == 'daily':
-        df = group_data.get_hourly(filenames, True)
-    elif time_select == 'weekly':
-        df = group_data.get_hourly(filenames, True)
-    else:
-        df = group_data.get_hourly(filenames, True)
-    fig = px.line(df)
-    fig.update_layout(
-        xaxis=dict(
-            rangeselector=dict(
-                buttons=list([
-                    dict(count=1,
-                         label="1m",
-                         step="month",
-                         stepmode="backward"),
-                    dict(count=6,
-                         label="6m",
-                         step="month",
-                         stepmode="backward"),
-                    dict(count=1,
-                         label="YTD",
-                         step="year",
-                         stepmode="todate"),
-                    dict(count=1,
-                         label="1y",
-                         step="year",
-                         stepmode="backward"),
-                    dict(step="all")
-                ])
-            ),
-            rangeslider=dict(
-                visible=True
-            ),
-            type="date"
-        )
-    )
-    graph = dcc.Graph(
-        figure=fig
-    )
+    graph = ActualPlot.build_graph(filenames, time_select)
     return graph
 
 
