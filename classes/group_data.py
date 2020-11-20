@@ -90,11 +90,11 @@ class GroupData:
         merged['Month'] = merged['Datetime'].dt.to_period(freq = 'M').apply(lambda r: r.start_time)
         grouped = merged.groupby('Month')
         if is_total:
-            weekly = grouped.sum()
+            monthly = grouped.sum()
         else:
-            weekly = grouped.mean()
-        weekly.index = weekly.index.astype('str')
-        return weekly
+            monthly = grouped.mean()
+        monthly.index = monthly.index.astype('str')
+        return monthly
 
     @staticmethod
     def get_yearly(filenames, is_total, column):
@@ -114,10 +114,10 @@ class GroupData:
         merged['Year'] = merged['Datetime'].dt.to_period(freq = 'Y').apply(lambda r: r.start_time)
         grouped = merged.groupby('Year')
         if is_total:
-            weekly = grouped.sum()
+            yearly = grouped.sum()
         else:
-            weekly = grouped.mean()
-        weekly.index = weekly.index.astype('str')
-        return weekly
+            yearly = grouped.mean()
+        yearly.index = yearly.index.astype('str')
+        return yearly
 
 
