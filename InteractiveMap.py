@@ -14,26 +14,24 @@ plotly_configuration = {"displaylogo" : False,
 figure = go.Figure()
 df_geography = pd.read_csv("./data/geography/geography_data.csv")
 ################################################################################
-'''
+#CODE FOR GETTING AVERAGES
+# map name column from geography table to filenames
 label_filenames = LabelMapper.map_to_dictionary_reverse()
 labels = df_geography['name']
 filenames = [label_filenames[x] for x in labels]
-
+# read csvs and put averages into array
 base_path = 'data/Analysis/'
 avgs = []
 for filename in filenames:
     data = pd.read_csv(base_path + filename)
     row = data.iloc[-24:, 0]
     avgs.append(row.mean())
-print(avgs)
-'''
+
 ################################################################################
-print(df_geography.latitude)
 df_geography.latitude = df_geography.latitude.apply(lambda x: ast.literal_eval(x))
-print(df_geography.longitude)
 df_geography.longitude = df_geography.longitude.apply(lambda x: ast.literal_eval(x))
-exit()
-for index, row  in df_geography[:5].iterrows():
+
+for index, row in df_geography.iterrows():
     figure.add_trace(go.Scattermapbox(mode = "lines",
                                       fill = "toself",
                                       fillcolor = "#ffb71b",
@@ -42,16 +40,16 @@ for index, row  in df_geography[:5].iterrows():
                                       lon = row["longitude"],
                                       marker = {"size" : 10,
                                                 "color" : "#0f2044"},
-                                      text = "{}".format(row["name"], str(avgs[index])),
+                                      text = "{}".format(row["name"] + ':  ' + str(avgs[index])),
                                       name = "",
-                                      hovertext = "{}".format(row["name"], str(avgs[index])),
+                                      hovertext = "{}".format(row["name"] + ':  ' + str(avgs[index])),
                                       hoverlabel = {"bgcolor" : "#bec0c2",
                                                     "bordercolor" : "#0f2044",
                                                     "font" : {"family" : "Sofia Pro",
                                                               "color" : "black"},
                                                     },
                                       #customdata =,
-                                      hovertemplate = "{}".format(row["name"]),
+                                      hovertemplate = "{}".format(row["name"] + ': ' + str(avgs[index])),
                                       ),
                      )
 
