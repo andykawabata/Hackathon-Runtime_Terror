@@ -43,7 +43,7 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
         value=filenames_labels[0]['filename'],
         multi=True
     ),
-    predictive_graph.create_graph()
+    predictive_graph.create_graph('Month')
 ])
 
 

@@ -8,14 +8,14 @@ class GroupData:
         return
 
     @staticmethod
-    def get_hourly(filenames):
+    def get_hourly(filenames, column):
         label_map = LabelMapper.map_to_dictionary()
         base_path = './data/Analysis/'
         merged = pd.DataFrame()
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
-            df = df[['Datetime', 'Actual']]
-            df = df.rename(columns={"Actual": label_map[filenames[i]]})
+            df = df[['Datetime', column]]
+            df = df.rename(columns={column: label_map[filenames[i]]})
             if merged.empty:
                 merged = df
                 continue
@@ -24,14 +24,14 @@ class GroupData:
         return merged
 
     @staticmethod
-    def get_daily(filenames, is_total):
+    def get_daily(filenames, is_total, column):
         label_map = LabelMapper.map_to_dictionary()
         merged = pd.DataFrame()
         base_path = './data/Analysis/'
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
-            df = df[['Datetime', 'Actual']]
-            df = df.rename(columns={"Actual": label_map[filenames[i]]})
+            df = df[['Datetime', column]]
+            df = df.rename(columns={column: label_map[filenames[i]]})
             if merged.empty:
                 merged = df
                 continue
@@ -49,13 +49,13 @@ class GroupData:
         return daily
 
     @staticmethod
-    def get_weekly(filenames, is_total):
+    def get_weekly(filenames, is_total, column):
         merged = pd.DataFrame()
         base_path = './data/Analysis/'
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
-            df = df[['Datetime', 'Actual']]
-            df = df.rename(columns={"Actual": filenames[i]})
+            df = df[['Datetime', column]]
+            df = df.rename(columns={column: filenames[i]})
             if merged.empty:
                 merged = df
                 continue
@@ -73,8 +73,51 @@ class GroupData:
         return weekly
 
     @staticmethod
-    def get_monthly(filenames, type):
-        return
+    def get_monthly(filenames, is_total, column):
+        merged = pd.DataFrame()
+        base_path = './data/Analysis/'
+        for i in range(0, len(filenames)):
+            df = pd.read_csv(base_path + filenames[i])
+            df = df[['Datetime', column]]
+            df = df.rename(columns={column: filenames[i]})
+            if merged.empty:
+                merged = df
+                continue
+            merged = pd.merge(merged, df, on="Datetime")
 
+        merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
+        merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
+        merged['Month'] = merged['Datetime'].dt.to_period(freq = 'M').apply(lambda r: r.start_time)
+        grouped = merged.groupby('Month')
+        if is_total:
+            weekly = grouped.sum()
+        else:
+            weekly = grouped.mean()
+        weekly.index = weekly.index.astype('str')
+        return weekly
+
+    @staticmethod
+    def get_yearly(filenames, is_total, column):
+        merged = pd.DataFrame()
+        base_path = './data/Analysis/'
+        for i in range(0, len(filenames)):
+            df = pd.read_csv(base_path + filenames[i])
+            df = df[['Datetime', column]]
+            df = df.rename(columns={column: filenames[i]})
+            if merged.empty:
+                merged = df
+                continue
+            merged = pd.merge(merged, df, on="Datetime")
+
+        merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
+        merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
+        merged['Year'] = merged['Datetime'].dt.to_period(freq = 'Y').apply(lambda r: r.start_time)
+        grouped = merged.groupby('Year')
+        if is_total:
+            weekly = grouped.sum()
+        else:
+            weekly = grouped.mean()
+        weekly.index = weekly.index.astype('str')
+        return weekly
 
 
