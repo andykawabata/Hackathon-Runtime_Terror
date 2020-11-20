@@ -11,13 +11,13 @@ class ActualPlot:
         if (isinstance(filenames, str)):
             filenames = [filenames]
         if time_select == 'hourly':
-            df = GroupData.get_hourly(filenames)
+            df = GroupData.get_hourly(filenames, 'Actual')
         elif time_select == 'daily':
-            df = GroupData.get_daily(filenames, True)
+            df = GroupData.get_daily(filenames, True, 'Actual')
         elif time_select == 'weekly':
-            df = GroupData.get_weekly(filenames, True)
+            df = GroupData.get_weekly(filenames, True, 'Actual')
         else:
-            df = GroupData.get_hourly(filenames, True)
+            df = GroupData.get_hourly(filenames, True, 'Actual')
         fig = px.line(df)
         fig.update_layout(
             xaxis=dict(

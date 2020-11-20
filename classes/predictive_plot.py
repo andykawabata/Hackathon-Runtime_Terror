@@ -7,6 +7,7 @@ import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from classes.read_csv import Data
+from classes.group_data import GroupData
 
 """ Predictive graph shows average usage and average predicted usage """
 class PredictivePlot:
@@ -24,57 +25,64 @@ class PredictivePlot:
         self.dfs = self.reader.get_dfs_for_all_files()
         self.labels = [filename.split('_')[0] for filename in self.names]
 
-    def get_avg_for_timeframe(self, column, df, timeframe=1):
+    def get_avg_for_timeframe(self, column, timeframe=1):
         """ Get average values for given timeframe.
         
         Keyword arguments:
-        timeframe -- 1: 1 hour, 2: 1 day, 3: 1 week, 4: 1 month, 5: 1 year
+        timeframe -- hourly, daily, weekly, monthly, yearly
         column -- the column of the dataframe, i.e. 'Predicted' or 'Actual'
         df -- the dataframe to collect data for average calculations
         """
 
-        df_new = pd.DataFrame()
-        for index, row in enumerate(df[column], start=1):
-            if index % timeframe == 0:
-                pass
+        if timeframe == 'Hour':
+            return GroupData.get_hourly([self.filename],column)
+        elif timeframe == 'Day':
+            return GroupData.get_daily([self.filename], False, column)
+        elif timeframe == 'Week':
+            return GroupData.get_weekly([self.filename], False, column)
+        elif timeframe == 'Month':
+            return GroupData.get_monthly([self.filename], False, column)
+        elif timeframe == 'Year':
+            return GroupData.get_yearly([self.filename], False, column)
+        else:
+            raise ValueError('timeframe must be 1, 2, 3, 4, or 5')
 
-    def create_graph(self, filename=None):
+
+    def create_graph(self, timeframe, filename=None):
         """ Create graph using sub_plots 
         
         Keywork arguments:
         filename -- the filename of csv data to display in the graph
+        timeframe -- the amount of time you want to display
         """
 
-        # Testing:
-        print(filename)
-        print(self.filename)
+        # Get average values from group_data class
+        df_actual = self.get_avg_for_timeframe('Actual', timeframe)
+        df_predicted = self.get_avg_for_timeframe('Predicted', timeframe)
 
-        # Clear unnecessary text from dataframe name
-        for index, name in enumerate(self.labels):
-            self.dfs[index].name = name
+        # Name the columns
+        df_actual.columns = ['Actual']
+        df_predicted.columns = ['Predicted']
+        predic = df_predicted['Predicted']
 
-        # Use data from new filename if provided
-        if filename is not None:
-            df = self.reader.get_df_for_file([filename])
-            df.name = filename
-        else:
-            df = self.reader.get_df_for_file([self.filename])
-            df.name = filename
+        # Set df name and create joined df
+        df_actual.name = self.filename
+        df_actual = df_actual.join(predic)
 
         # Create line figure using given dataframe
-        fig = px.line(df, x='Datetime', y=['Predicted'])
+        fig = px.line(df_actual, x=df_actual.index, y=['Predicted'])
         lines = []
 
         # Two subplots to show each line, avg actual and avg predicted
         fig = make_subplots(rows=2, cols=1, shared_xaxes=True,vertical_spacing=0.009,horizontal_spacing=0.009)
         fig['layout']['margin'] = {'l': 50, 'r': 50, 'b': 100, 't': 100}
 
-        fig.append_trace({'x':df['Datetime'], 'y':df['Actual'], 'type':'scatter', 'name':'Actual'},1,1)
-        fig.append_trace({'x':df['Datetime'], 'y':df['Predicted'], 'type':'scatter', 'name':'Predicted'},1,1)
+        fig.append_trace({'x':df_actual.index, 'y':df_actual['Actual'], 'type':'scatter', 'name':'Actual'},1,1)
+        fig.append_trace({'x':df_actual.index, 'y':df_actual['Predicted'], 'type':'scatter', 'name':'Predicted'},1,1)
 
         # Add range slider
         fig.update_layout(
-            title=df.name,
+            title=self.filename,
             xaxis=dict(
                 rangeselector=dict(
                     buttons=list([
