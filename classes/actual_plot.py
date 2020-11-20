@@ -17,7 +17,7 @@ class ActualPlot:
         elif time_select == 'weekly':
             df = GroupData.get_weekly(filenames, True, 'Actual')
         else:
-            df = GroupData.get_hourly(filenames, True, 'Actual')
+            df = GroupData.get_monthly(filenames, True, 'Actual')
         fig = px.line(df)
         fig.update_layout(
             xaxis=dict(
