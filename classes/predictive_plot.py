@@ -1,6 +1,7 @@
 
 import dash
 import dash_core_components as dcc
+from dateutil import rrule, parser
 import dash_html_components as html
 import plotly.express as px
 import pandas as pd
@@ -8,6 +9,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from classes.read_csv import Data
 from classes.group_data import GroupData
+import datetime
 
 """ Predictive graph shows average usage and average predicted usage """
 class PredictivePlot:
@@ -25,30 +27,39 @@ class PredictivePlot:
         self.dfs = self.reader.get_dfs_for_all_files()
         self.labels = [filename.split('_')[0] for filename in self.names]
 
-    def get_avg_for_timeframe(self, column, timeframe=1):
+    def get_avg_for_timeframe(self, df, timeframe='Week'):
         """ Get average values for given timeframe.
         
         Keyword arguments:
-        timeframe -- hourly, daily, weekly, monthly, yearly
+        timeframe -- hour, day, week, month
         column -- the column of the dataframe, i.e. 'Predicted' or 'Actual'
         df -- the dataframe to collect data for average calculations
         """
 
+        tf_abbv = ""
+
         if timeframe == 'Hour':
-            return GroupData.get_hourly([self.filename],column)
+            tf_abbv = "H"
         elif timeframe == 'Day':
-            return GroupData.get_daily([self.filename], False, column)
+            tf_abbv = "D"
         elif timeframe == 'Week':
-            return GroupData.get_weekly([self.filename], False, column)
+            tf_abbv = "W"
         elif timeframe == 'Month':
-            return GroupData.get_monthly([self.filename], False, column)
-        elif timeframe == 'Year':
-            return GroupData.get_yearly([self.filename], False, column)
+            tf_abbv = "M"
         else:
-            raise ValueError('timeframe must be 1, 2, 3, 4, or 5')
+            raise ValueError('Hour, Day, Week, Month')
 
-
-    def create_graph(self, timeframe, filename=None):
+        # Calculate average values for selected timeframe
+        df['Datetime'] = df['Datetime'].apply(lambda x: x[:19])
+        df['Datetime'] = pd.to_datetime(df['Datetime'], errors='coerce')
+        df[timeframe] = df['Datetime'].dt.to_period(freq = tf_abbv).apply(lambda r: r.start_time)
+        grouped = df.groupby(timeframe)
+        pred_df = grouped[timeframe, 'Predicted'].mean()
+        actual_df = grouped[timeframe, 'Actual'].mean()
+        merged = pd.merge(pred_df, actual_df, on=pred_df.index)
+        return merged
+        
+    def create_graph(self, start_date, end_date, timeframe):
         """ Create graph using sub_plots 
         
         Keywork arguments:
@@ -56,61 +67,25 @@ class PredictivePlot:
         timeframe -- the amount of time you want to display
         """
 
-        # Get average values from group_data class
-        df_actual = self.get_avg_for_timeframe('Actual', timeframe)
-        df_predicted = self.get_avg_for_timeframe('Predicted', timeframe)
-
-        # Name the columns
-        df_actual.columns = ['Actual']
-        df_predicted.columns = ['Predicted']
-        predic = df_predicted['Predicted']
-
-        # Set df name and create joined df
-        df_actual.name = self.filename
-        df_actual = df_actual.join(predic)
+        # Get average values
+        avg_df = self.get_avg_for_timeframe(self.dfs[0], timeframe)
+        avg_df.rename({0: "Datetime"}, axis='columns')
+        avg_df.columns = ['Datetime', 'Predicted', 'Actual']
+        mask  = (avg_df['Datetime'] > start_date) & (avg_df['Datetime'] < end_date)
+        filtered_df = avg_df.loc[mask]
 
         # Create line figure using given dataframe
-        fig = px.line(df_actual, x=df_actual.index, y=['Predicted'])
+        fig = px.line(filtered_df, x=filtered_df.index, y=['Predicted'])
         lines = []
 
         # Two subplots to show each line, avg actual and avg predicted
         fig = make_subplots(rows=2, cols=1, shared_xaxes=True,vertical_spacing=0.009,horizontal_spacing=0.009)
         fig['layout']['margin'] = {'l': 50, 'r': 50, 'b': 100, 't': 100}
 
-        fig.append_trace({'x':df_actual.index, 'y':df_actual['Actual'], 'type':'scatter', 'name':'Actual'},1,1)
-        fig.append_trace({'x':df_actual.index, 'y':df_actual['Predicted'], 'type':'scatter', 'name':'Predicted'},1,1)
-
-        # Add range slider
-        fig.update_layout(
-            title=self.filename,
-            xaxis=dict(
-                rangeselector=dict(
-                    buttons=list([
-                        dict(count=1,
-                            label="Hour",
-                            step="month",
-                            stepmode="backward"),
-                        dict(count=6,
-                            label="Day",
-                            step="month",
-                            stepmode="backward"),
-                        dict(count=1,
-                            label="Month",
-                            step="year",
-                            stepmode="todate"),
-                        dict(count=1,
-                            label="Year",
-                            step="year",
-                            stepmode="backward"),
-                        dict(step="all")
-                    ])
-                ),
-                rangeslider=dict(
-                    visible=True
-                ),
-                type="date"
-            )
-        )
+        # Plot data
+        fig.append_trace({'x':filtered_df['Datetime'], 'y':filtered_df['Actual'], 'type':'scatter', 'name':'Actual'},1,1)
+        fig.append_trace({'x':filtered_df['Datetime'], 'y':filtered_df['Predicted'], 'type':'scatter', 'name':'Predicted'},1,1)
+        label = 'Average ' + timeframe + ' for 2020 in ' + str(self.filename.split("_")[0])
         fig.update_layout(hovermode='x unified')
         predictive = dcc.Graph(
             id='example-graph',
