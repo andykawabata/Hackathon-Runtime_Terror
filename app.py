@@ -4,6 +4,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+from datetime import date
 import pandas as pd
 import plotly.express as px
 from classes.read_csv import Data
@@ -17,8 +18,9 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 filenames_labels = LabelMapper.map_to_array()
 locations = []
-
-predictive_graph = PredictivePlot(filenames_labels[0]['filename'])
+files = Data().get_all_file_names()
+# predictive_graph = PredictivePlot(files[0])
+# graph = predictive_graph.create_graph('Week')
 
 # BUILD LABELS AND VALUES FOR BUILDING SELECTION DROPDOWN
 for pair in filenames_labels:
@@ -43,7 +45,26 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
         value=filenames_labels[0]['filename'],
         multi=True
     ),
-    predictive_graph.create_graph('Month')
+    dcc.DatePickerRange(
+        id='my-date-picker-range',
+        min_date_allowed=date(2020, 1, 1),
+        max_date_allowed=date(2020, 9, 19),
+        initial_visible_month=date(2020, 1, 5),
+        end_date=date(2017, 8, 25)
+    ),
+    dcc.RadioItems(
+                id='time-select-pred',
+                options=[
+                    {'label': 'Hourly', 'value': 'Hour'},
+                    {'label': 'Daily', 'value': 'Day'},
+                    {'label': 'Weekly', 'value': 'Week'},
+                    {'label': 'Monthly', 'value': 'Month'}
+                ],
+                value='daily',
+                labelStyle={'display': 'inline-block'}
+            ),
+    html.Div(id='output-container-date-picker-range'),
+    html.Div(id='predictive-graph-container', children=[]),
 ])
 
 
@@ -63,6 +84,28 @@ def update_output(filenames, time_select):
     graph = ActualPlot.build_graph(filenames, time_select)
     return graph
 
+@app.callback(
+    dash.dependencies.Output('predictive-graph-container', 'children'),
+    [dash.dependencies.Input('building-names', 'value'),
+     dash.dependencies.Input('my-date-picker-range', 'start_date'),
+     dash.dependencies.Input('my-date-picker-range', 'end_date'),
+     dash.dependencies.Input('time-select-pred', 'value')])
+def update_output(filenames, start_date, end_date, time_select_pred):
+    string_prefix = 'You have selected: '
+    
+    predictive_graph = PredictivePlot(filenames)
+
+    if start_date is not None:
+        start_date_object = date.fromisoformat(start_date)
+        start_date_string = start_date_object.strftime('%B %d, %Y')
+        string_prefix = string_prefix + 'Start Date: ' + start_date_string + ' | '
+    if end_date is not None:
+        end_date_object = date.fromisoformat(end_date)
+        end_date_string = end_date_object.strftime('%B %d, %Y')
+        string_prefix = string_prefix + 'End Date: ' + end_date_string
+    if start_date is not None and end_date is not None:
+        graph = predictive_graph.create_graph(start_date_string, end_date_string, time_select_pred)
+        return graph
 
 if __name__ == '__main__':
     app.run_server(debug=True)
