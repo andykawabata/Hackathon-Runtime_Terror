@@ -1,4 +1,5 @@
 from classes.group_data import GroupData
+from classes.group_data_multiple import GroupDataMultiple
 import plotly.express as px
 import dash_core_components as dcc
 
@@ -6,18 +7,25 @@ import dash_core_components as dcc
 class ActualPlot:
 
     @staticmethod
-    def build_graph(filenames, time_select):
+    def build_graph(filenames, time_select, avg_total, is_predicted):
+        is_total = True
+        if avg_total == 'average':
+            is_total = False
+        columns = ['Actual']
+        if is_predicted:
+            columns.append('Predicted')
+
         df = None
         if (isinstance(filenames, str)):
             filenames = [filenames]
         if time_select == 'hourly':
-            df = GroupData.get_hourly(filenames, 'Actual')
+            df = GroupDataMultiple.get_hourly(filenames, columns)
         elif time_select == 'daily':
-            df = GroupData.get_daily(filenames, True, 'Actual')
+            df = GroupDataMultiple.get_daily(filenames, is_total, columns)
         elif time_select == 'weekly':
-            df = GroupData.get_weekly(filenames, True, 'Actual')
+            df = GroupDataMultiple.get_weekly(filenames, is_total, columns)
         else:
-            df = GroupData.get_hourly(filenames, True, 'Actual')
+            df = GroupDataMultiple.get_monthly(filenames, is_total, columns)
         fig = px.line(df)
         fig.update_layout(
             xaxis=dict(
