@@ -14,8 +14,7 @@ from classes.label_mapper import LabelMapper
 import dash_bootstrap_components as dbc
 from layout.graph_one_components import GraphOneComponents
 
-external_stylesheets = [#'https://codepen.io/chriddyp/pen/bWLwgP.css',
-                        'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css']
+external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
