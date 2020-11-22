@@ -11,6 +11,7 @@ from classes.read_csv import Data
 from classes.predictive_plot import PredictivePlot
 from classes.actual_plot import ActualPlot
 from classes.label_mapper import LabelMapper
+import dash_bootstrap_components as dbc
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -24,71 +25,72 @@ files = Data().get_all_file_names()
 for pair in filenames_labels:
     locations.append({'label': pair['label'], 'value': pair['filename']})
 
-app.layout = html.Div(style={'margin': '0  300px' }, children=[
+app.layout = html.Div( children=[
 
-###############################################################################################
-## GRAPH 1
-    dcc.RadioItems(
-                id='actual-predicted-select',
-                options=[
-                    {'label': 'Actual', 'value': 'actual'},
-                    {'label': 'Predicted', 'value': 'predicted'}
-                ],
-                value='actual',
-                labelStyle={'display': 'inline-block'}
-            ),
-    dcc.RadioItems(
-                id='avg-total-select',
-                options=[
-                    {'label': 'Average', 'value': 'average'},
-                    {'label': 'Total', 'value': 'total'}
-                ],
-                value='average',
-                labelStyle={'display': 'inline-block'}
-            ),
-    dcc.RadioItems(
-                id='time-select',
-                options=[
-                    {'label': 'Hourly', 'value': 'hourly'},
-                    {'label': 'Daily', 'value': 'daily'},
-                    {'label': 'Weekly', 'value': 'weekly'},
-                    {'label': 'Monthly', 'value': 'monthly'}
-                ],
-                value='weekly',
-                labelStyle={'display': 'inline-block'}
-            ),
-    dcc.Dropdown(
-        id='building-names',
-        options=locations,
-        value=filenames_labels[0]['filename'],
-        multi=True
-    ),
-    html.Div(id='actual-graph-container', children=[
-        dcc.Graph(
-        )
-    ]),
+    dbc.Container([
+        ###############################################################################################
+        ## GRAPH 1
+        dcc.RadioItems(
+                    id='actual-predicted-select',
+                    options=[
+                        {'label': 'Actual', 'value': 'actual'},
+                        {'label': 'Predicted', 'value': 'predicted'}
+                    ],
+                    value='actual',
+                    labelStyle={'display': 'inline-block'}
+                ),
+        dcc.RadioItems(
+                    id='avg-total-select',
+                    options=[
+                        {'label': 'Average', 'value': 'average'},
+                        {'label': 'Total', 'value': 'total'}
+                    ],
+                    value='average',
+                    labelStyle={'display': 'inline-block'}
+                ),
+        dcc.RadioItems(
+                    id='time-select',
+                    options=[
+                        {'label': 'Hourly', 'value': 'hourly'},
+                        {'label': 'Daily', 'value': 'daily'},
+                        {'label': 'Weekly', 'value': 'weekly'},
+                        {'label': 'Monthly', 'value': 'monthly'}
+                    ],
+                    value='weekly',
+                    labelStyle={'display': 'inline-block'}
+                ),
+        dcc.Dropdown(
+            id='building-names',
+            options=locations,
+            value=filenames_labels[0]['filename'],
+            multi=True
+        ),
+        html.Div(id='actual-graph-container', children=[
+            dcc.Graph(
+            )
+        ]),
 
-###############################################################################################
-## GRAPH 2
-    dcc.RadioItems(
-                id='time-select-pred',
-                options=[
-                    {'label': 'Hourly', 'value': 'Hour'},
-                    {'label': 'Daily', 'value': 'Day'},
-                    {'label': 'Weekly', 'value': 'Week'},
-                    {'label': 'Monthly', 'value': 'Month'}
-                ],
-                value='Day',
-                labelStyle={'display': 'inline-block'}
-            ),
-    html.Div(id='output-container-date-picker-range'),
-    html.Div(id='predictive-graph-container', children=[]),
-    dcc.Dropdown(
-        id='building-names-pred',
-        options=locations,
-        value=filenames_labels[0]['filename'],
-        multi=False
-    ),
+        ###############################################################################################
+        ## GRAPH 2
+        dcc.RadioItems(
+                    id='time-select-pred',
+                    options=[
+                        {'label': 'Hourly', 'value': 'Hour'},
+                        {'label': 'Daily', 'value': 'Day'},
+                        {'label': 'Weekly', 'value': 'Week'},
+                        {'label': 'Monthly', 'value': 'Month'}
+                    ],
+                    value='Day',
+                    labelStyle={'display': 'inline-block'}
+                ),
+        html.Div(id='output-container-date-picker-range'),
+        html.Div(id='predictive-graph-container', children=[]),
+        dcc.Dropdown(
+            id='building-names-pred',
+            options=locations,
+            value=filenames_labels[0]['filename'],
+            multi=False
+        )])
 ])
 
 
