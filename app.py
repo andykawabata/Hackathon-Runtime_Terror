@@ -19,8 +19,6 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 filenames_labels = LabelMapper.map_to_array()
 locations = []
 files = Data().get_all_file_names()
-predictive_graph = PredictivePlot(files[0])
-graph = predictive_graph.create_graph2()
 
 # BUILD LABELS AND VALUES FOR BUILDING SELECTION DROPDOWN
 for pair in filenames_labels:
@@ -45,14 +43,6 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
         value=filenames_labels[0]['filename'],
         multi=True
     ),
-    dcc.DatePickerRange(
-        id='my-date-picker-range',
-        min_date_allowed=date(2020, 1, 1),
-        max_date_allowed=date(2020, 9, 19),
-        initial_visible_month=date(2020, 1, 5),
-        start_date=date(2020, 1, 1),
-        end_date=date(2020, 1, 31)
-    ),
     dcc.RadioItems(
                 id='time-select-pred',
                 options=[
@@ -61,12 +51,17 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
                     {'label': 'Weekly', 'value': 'Week'},
                     {'label': 'Monthly', 'value': 'Month'}
                 ],
-                value='daily',
+                value='Day',
                 labelStyle={'display': 'inline-block'}
             ),
     html.Div(id='output-container-date-picker-range'),
     html.Div(id='predictive-graph-container', children=[]),
-    graph
+    dcc.Dropdown(
+        id='building-names-pred',
+        options=locations,
+        value=filenames_labels[0]['filename'],
+        multi=False
+    ),
 ])
 
 
@@ -88,30 +83,12 @@ def update_output(filenames, time_select):
 
 @app.callback(
     dash.dependencies.Output('predictive-graph-container', 'children'),
-    [dash.dependencies.Input('building-names', 'value'),
-     dash.dependencies.Input('my-date-picker-range', 'start_date'),
-     dash.dependencies.Input('my-date-picker-range', 'end_date'),
+    [dash.dependencies.Input('building-names-pred', 'value'),
      dash.dependencies.Input('time-select-pred', 'value')])
-def update_output(filenames, start_date, end_date, time_select_pred):
-    string_prefix = 'You have selected: '
-    
-    predictive_graph = PredictivePlot(filenames[-1])
-
-    if start_date is not None:
-        start_date_object = date.fromisoformat(start_date)
-        start_date_string = start_date_object.strftime('%B %d, %Y')
-    if end_date is not None:
-        end_date_object = date.fromisoformat(end_date)
-        end_date_string = end_date_object.strftime('%B %d, %Y')
-    if start_date is not None and end_date is not None and time_select_pred is not None:
-        graph = predictive_graph.create_graph2(start_date_string, end_date_string, time_select_pred)
-        return graph
-    # if time_select_pred is not None:
-    #     graph = predictive_graph.create_graph2(time_select_pred)
-    #     return graph
-    else:
-        graph = predictive_graph.create_graph2()
-        return graph
+def update_output(filename, time_select_pred):
+    predictive_graph = PredictivePlot(filename[0])
+    graph = predictive_graph.create_graph2(Data().get_df_for_file(filename), time_select_pred)
+    return graph
 
 if __name__ == '__main__':
     app.run_server(debug=True)
