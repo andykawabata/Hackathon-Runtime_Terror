@@ -27,6 +27,27 @@ for pair in filenames_labels:
     locations.append({'label': pair['label'], 'value': pair['filename']})
 
 app.layout = html.Div(style={'margin': '0  300px' }, children=[
+
+###############################################################################################
+## GRAPH 1
+    dcc.RadioItems(
+                id='actual-predicted-select',
+                options=[
+                    {'label': 'Actual', 'value': 'actual'},
+                    {'label': 'Predicted', 'value': 'predicted'}
+                ],
+                value='actual',
+                labelStyle={'display': 'inline-block'}
+            ),
+    dcc.RadioItems(
+                id='avg-total-select',
+                options=[
+                    {'label': 'Average', 'value': 'average'},
+                    {'label': 'Total', 'value': 'total'}
+                ],
+                value='average',
+                labelStyle={'display': 'inline-block'}
+            ),
     dcc.RadioItems(
                 id='time-select',
                 options=[
@@ -35,16 +56,23 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
                     {'label': 'Weekly', 'value': 'weekly'},
                     {'label': 'Monthly', 'value': 'monthly'}
                 ],
-                value='daily',
+                value='weekly',
                 labelStyle={'display': 'inline-block'}
             ),
-    html.Div(id='actual-graph-container', children=[]),
     dcc.Dropdown(
         id='building-names',
         options=locations,
         value=filenames_labels[0]['filename'],
         multi=True
     ),
+
+    html.Div(id='actual-graph-container', children=[
+        dcc.Graph(
+        )
+    ]),
+
+###############################################################################################
+## GRAPH 2
     dcc.DatePickerRange(
         id='my-date-picker-range',
         min_date_allowed=date(2020, 1, 1),
@@ -68,11 +96,31 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
 ])
 
 
+@app.callback([
+    dash.dependencies.Output('building-names', 'multi'),
+    dash.dependencies.Output('building-names', 'value')],
+    [dash.dependencies.Input('actual-predicted-select', 'value'),
+     dash.dependencies.State('building-names', 'value')])
+def update_output(actual_predicted, building_names):
+    multi = True
+    if actual_predicted == 'predicted':
+        if (isinstance(building_names, str)):
+            building_names = [building_names]
+        building = building_names[0]
+        multi = False
+    else:
+        building = building_names
+
+    return multi, building
+
+
 @app.callback(
     dash.dependencies.Output('actual-graph-container', 'children'),
     [dash.dependencies.Input('building-names', 'value'),
-     dash.dependencies.Input('time-select', 'value')])
-def update_output(filenames, time_select):
+     dash.dependencies.Input('time-select', 'value'),
+     dash.dependencies.Input('avg-total-select', 'value'),
+     dash.dependencies.Input('actual-predicted-select', 'value')])
+def update_output(filenames, time_select, avg_total, actual_predicted):
     """
     This callback fires when the building-names dropdown, and time period
     selection fields are changed in the view
@@ -81,7 +129,11 @@ def update_output(filenames, time_select):
     :param time_select: hourly, daily, weekly, monthly
     :return: a single of multi-line graph based on the inputs
     """
-    graph = ActualPlot.build_graph(filenames, time_select)
+    is_predicted = False
+    if actual_predicted == 'predicted':
+        is_predicted = True
+
+    graph = ActualPlot.build_graph(filenames, time_select, avg_total, is_predicted)
     return graph
 
 @app.callback(
