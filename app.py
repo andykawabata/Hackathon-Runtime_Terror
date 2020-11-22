@@ -86,6 +86,14 @@ def update_output(filenames, time_select):
     [dash.dependencies.Input('building-names-pred', 'value'),
      dash.dependencies.Input('time-select-pred', 'value')])
 def update_output(filename, time_select_pred):
+    """
+    This callback fires when the building-names-pred dropdown, and time period
+    selection fields are changed in the view
+    :param filename: name of file to be rendered into prediction graph
+    :param labels: labels associated with filename
+    :param time_select_pred: hourly, daily, weekly, monthly
+    :return: a multi-line graph based on the inputs
+    """
     predictive_graph = PredictivePlot(filename[0])
     graph = predictive_graph.create_graph2(Data().get_df_for_file(filename), time_select_pred)
     return graph
