@@ -32,6 +32,8 @@ app.layout = html.Div( children=[
     dbc.Container([
         ###############################################################################################
         ## GRAPH 1
+        html.H3('Energy Consuption at UNCG by Location', className='mt-2'),
+        html.P('Further description of graph.'),
         dbc.Row([
             dbc.Col(
                 dbc.Card(
