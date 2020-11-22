@@ -13,20 +13,41 @@ from classes.actual_plot import ActualPlot
 from classes.label_mapper import LabelMapper
 import dash_bootstrap_components as dbc
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+# external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'])
 
 filenames_labels = LabelMapper.map_to_array()
 locations = []
 files = Data().get_all_file_names()
+page_loc = ''
 
 # BUILD LABELS AND VALUES FOR BUILDING SELECTION DROPDOWN
 for pair in filenames_labels:
     locations.append({'label': pair['label'], 'value': pair['filename']})
 
-app.layout = html.Div( children=[
+navbar = dbc.NavbarSimple(
+    children=[
+        dbc.NavItem(dbc.NavLink("Page 1", href="#")),
+        dbc.DropdownMenu(
+            children=[
+                dbc.DropdownMenuItem("More pages", header=True),
+                dbc.DropdownMenuItem("Page 2", href="#"),
+                dbc.DropdownMenuItem("Page 3", href="#"),
+            ],
+            nav=True,
+            in_navbar=True,
+            label="More",
+        ),
+    ],
+    brand="NavbarSimple",
+    brand_href="#",
+    color="#0b1b3f",
+    dark=True,
+)
 
+app.layout = html.Div( children=[
+    navbar,
     dbc.Container([
         ###############################################################################################
         ## GRAPH 1

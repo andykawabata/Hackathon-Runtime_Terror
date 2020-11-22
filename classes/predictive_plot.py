@@ -53,7 +53,7 @@ class PredictivePlot:
                 new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.dayofweek).mean()
             elif timeframe == 'Week':
                 tf_abbv = "W"
-                new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.weekofyear).mean()
+                new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.week).mean()
             elif timeframe == 'Month':
                 tf_abbv = "M"
                 new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.month).mean()
