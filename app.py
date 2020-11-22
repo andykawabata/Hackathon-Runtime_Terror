@@ -66,7 +66,7 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
             ),
     html.Div(id='output-container-date-picker-range'),
     html.Div(id='predictive-graph-container', children=[]),
-    # graph
+    graph
 ])
 
 

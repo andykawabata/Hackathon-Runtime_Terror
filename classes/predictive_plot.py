@@ -102,23 +102,24 @@ class PredictivePlot:
             print(filtered_df.head(30))
 
             dtime = pd.DataFrame(filtered_df)
-            filtered_df['Datetime'] = pd.to_datetime(filtered_df['Datetime'])#, errors='coerce'
-            # dtime = filtered_df['Datetime']
+            filtered_df['Datetime'] = pd.to_datetime(filtered_df.Datetime, errors='coerce', utc=True) #.dt.tz_localize(None)
+            
+            # print(filtered_df['Datetime'].dt.tz_localize(None))
+            # filtered_df['Datetime'].apply(lambda x: pd.to_datetime(x)) # .tz_localize(None)
+            # print(filtered_df['Datetime'].dt.hour)
 
-            # new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.hour).mean()
-            # new_avg_df['Datetime'] = dtime
-            # print(new_avg_df.head(30))
+            # filtered_df['Datetime'] = pd.to_datetime(filtered_df.Datetime)
 
-            new_avg_df = []
+            new_avg_df = pd.DataFrame()
 
             if timeframe == 'Hour':
                 tf_abbv = "H"
                 axis_labels = hr
                 # filtered_df['Time'] = filtered_df['Datetime'].hour
 
-                # print(filtered_df.head(25))
+                print(filtered_df.head(25))
 
-                new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.hour).mean()
+                new_avg_df = filtered_df.groupby(filtered_df.Datetime.dt.hour).mean() # ['Datetime']
 
                 # filtered_df = filtered_df.groupby(pd.to_datetime(filtered_df['Datetime'], errors='coerce', utc=True).dt.hour).mean()
                 # new_avg_df['Datetime'] = dtime['Datetime']
@@ -139,20 +140,15 @@ class PredictivePlot:
                 # new_avg_df['Datetime'] = dtime.dt.month
 
             
-            print(filtered_df.head(25))
-            print(new_avg_df.head(25))
+            # print(filtered_df.head(25))
+            # print(new_avg_df.head(25))
 
-            new_avg_df['Time'] = new_avg_df.index
-
-            # new_avg_df.Time = pd.to_timedelta(new_avg_df.index + ':00', unit=tf_abbv)
-            # new_avg_df.index = new_avg_df.index + new_avg_df.Time
-            # new_avg_df = new_avg_df.drop('Time', axis=1)
-            # new_avg_df.index.name = 'Date'
+            # new_avg_df['Time'] = new_avg_df.index
 
             print(new_avg_df.head(25))
 
             # Create line figure using given dataframe
-            fig = px.line(new_avg_df, x=new_avg_df['Time'], y=['Predicted'])
+            fig = px.line(new_avg_df, x=new_avg_df.index, y=['Predicted'])
             lines = []
 
             # Two subplots to show each line, avg actual and avg predicted
