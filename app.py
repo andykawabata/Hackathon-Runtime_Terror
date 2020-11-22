@@ -19,8 +19,8 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 filenames_labels = LabelMapper.map_to_array()
 locations = []
 files = Data().get_all_file_names()
-# predictive_graph = PredictivePlot(files[0])
-# graph = predictive_graph.create_graph('Week')
+predictive_graph = PredictivePlot(files[0])
+graph = predictive_graph.create_graph2()
 
 # BUILD LABELS AND VALUES FOR BUILDING SELECTION DROPDOWN
 for pair in filenames_labels:
@@ -50,7 +50,8 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
         min_date_allowed=date(2020, 1, 1),
         max_date_allowed=date(2020, 9, 19),
         initial_visible_month=date(2020, 1, 5),
-        end_date=date(2017, 8, 25)
+        start_date=date(2020, 1, 1),
+        end_date=date(2020, 1, 31)
     ),
     dcc.RadioItems(
                 id='time-select-pred',
@@ -65,6 +66,7 @@ app.layout = html.Div(style={'margin': '0  300px' }, children=[
             ),
     html.Div(id='output-container-date-picker-range'),
     html.Div(id='predictive-graph-container', children=[]),
+    # graph
 ])
 
 
@@ -93,18 +95,22 @@ def update_output(filenames, time_select):
 def update_output(filenames, start_date, end_date, time_select_pred):
     string_prefix = 'You have selected: '
     
-    predictive_graph = PredictivePlot(filenames)
+    predictive_graph = PredictivePlot(filenames[-1])
 
     if start_date is not None:
         start_date_object = date.fromisoformat(start_date)
         start_date_string = start_date_object.strftime('%B %d, %Y')
-        string_prefix = string_prefix + 'Start Date: ' + start_date_string + ' | '
     if end_date is not None:
         end_date_object = date.fromisoformat(end_date)
         end_date_string = end_date_object.strftime('%B %d, %Y')
-        string_prefix = string_prefix + 'End Date: ' + end_date_string
-    if start_date is not None and end_date is not None:
-        graph = predictive_graph.create_graph(start_date_string, end_date_string, time_select_pred)
+    if start_date is not None and end_date is not None and time_select_pred is not None:
+        graph = predictive_graph.create_graph2(start_date_string, end_date_string, time_select_pred)
+        return graph
+    # if time_select_pred is not None:
+    #     graph = predictive_graph.create_graph2(time_select_pred)
+    #     return graph
+    else:
+        graph = predictive_graph.create_graph2()
         return graph
 
 if __name__ == '__main__':
