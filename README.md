@@ -27,6 +27,7 @@ To display the dashboard:
 **Christopher Brantley**
 
 **Andrew Kawabata**
+*"Since I began coding a few years ago, I have been dedicated to increasing my understanding in all aspects of computer science and building useful applications. I love being able to use data to help further our understanding of the world we live in. I'm currently a senior UNCG and work as a tutor in the computer science department."*
 
 **Kyle Supple**
 
