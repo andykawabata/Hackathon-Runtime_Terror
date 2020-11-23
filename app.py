@@ -11,6 +11,7 @@ from classes.read_csv import Data
 from classes.predictive_plot import PredictivePlot
 from classes.actual_plot import ActualPlot
 from classes.label_mapper import LabelMapper
+from classes import InteractiveMap
 import dash_bootstrap_components as dbc
 from layout.graph_one_components import GraphOneComponents
 from layout.graph_two_components import  GraphTwoComponents
@@ -47,6 +48,8 @@ navbar = dbc.NavbarSimple(
 
 app.layout = html.Div( children=[
     navbar,
+    # Html Definition for Interactive Plotly Graph
+    InteractiveMap.return_html_def_building_plot(),
     dbc.Container([
         ###############################################################################################
         ## GRAPH 1
