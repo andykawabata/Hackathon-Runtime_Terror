@@ -30,6 +30,7 @@ To display the dashboard:
 *"Since I began coding a few years ago, I have been dedicated to increasing my understanding in all aspects of computer science and building useful applications. I love being able to use data to help further our understanding of the world we live in. I'm currently a senior UNCG and work as a tutor in the computer science department."*
 
 **Kyle Supple**
+*"Hi, I am a computer science major at UNCG. I really enjoy anything to do with programming including creating web apps, machine learning models, bots, and writing scripts that make my life easier. Programming appeals to me because it allows me to break a complex problem down into its fundamental parts. In my free time I'm usually working on my latest project or I'm up in the mountains biking and climbing with friends."*
 
 **Katelynn Urgitus**
 
