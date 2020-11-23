@@ -1,0 +1,27 @@
+
+
+/* .header {
+    background-color: #c4c4c4;
+} */
+
+body {
+    background-color: #ebebeb;
+    
+}
+
+h3 {
+    padding: 6px;
+    background-color: #ffb71c;
+}
+
+h6 {
+    padding: 12px;
+    padding-top: 10px;
+}
+
+.card {
+    padding: 6px;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+}
+

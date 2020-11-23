@@ -15,7 +15,10 @@ import dash_bootstrap_components as dbc
 from layout.graph_one_components import GraphOneComponents
 from layout.graph_two_components import  GraphTwoComponents
 
-external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css']
+style1 = 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'
+style2 = 'styles/style.css'
+
+external_stylesheets = [style1, style2]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -48,12 +51,12 @@ app.layout = html.Div( children=[
         ###############################################################################################
         ## GRAPH 1
         html.Span([
-            html.H3('Energy Consuption at UNCG by Location', 
-            className='mt-2', id='actual-graph', 
-            style={'background-color': '#ffb71c', 'padding': '6px'}),
+            html.H3('Energy Consuption by Location', 
+            className='mt-2', id='actual-graph'
+            )
         ]),
         # html.H3('Energy Consuption at UNCG by Location', className='mt-2', id='actual-graph'),
-        html.H6('Further description of graph.', style={'padding': '12px'}),
+        html.H6('Further description of graph.'),
         dbc.Row([
             dbc.Col(
                 dbc.Card(
@@ -61,7 +64,6 @@ app.layout = html.Div( children=[
                         html.H6('Aggregate Type'),
                         GraphOneComponents.radio_avg_total(),
                         ],
-                        style={'padding': '12px'}
                     ),
                     className="mb-3",
                 ),
@@ -74,7 +76,7 @@ app.layout = html.Div( children=[
                         html.H6('Time Frame'),
                         GraphOneComponents.radio_time()
                         ],
-                        style={'padding': '12px'}
+                        # style={'padding': '12px'}
                     ),
                     className="mb-3",
 
@@ -87,7 +89,7 @@ app.layout = html.Div( children=[
                         html.H6('Value Type'),
                         GraphOneComponents.radio_actual_pred(),
                         ],
-                        style={'padding': '12px'}
+                        # style={'padding': '12px'}
                     ),
                     className="mb-3",
                 ),
@@ -130,21 +132,23 @@ app.layout = html.Div( children=[
         ## GRAPH 2
         html.Span([
             html.H3('Average Energy Consuption by Location', 
-            className='mt-2', id='predicted-graph', 
-            style={'background-color': '#ffb71c', 'padding': '6px'}),
+            className='mt-2', id='predicted-graph',
+            ),
         ]),
-        html.H6('Further description of graph.', style={'padding': '12px'}),
+        html.H6('Further description of graph.'),
 
         dbc.Row([
             dbc.Col(
                 dbc.Card(
                     dbc.CardBody([
                         html.H6('Time Frame'),
-                        GraphTwoComponents.radio_pred()
+                        GraphTwoComponents.radio_pred(),
+                        GraphTwoComponents.tf_tooltip()
                     ],
                         style={'padding': '12px'}
                     ),
                     className="mb-3",
+                    id='timeframe-graph2'
 
                 ),
                 md=4
@@ -154,11 +158,14 @@ app.layout = html.Div( children=[
                     dbc.CardBody([
                         html.H6('Description'),
                         GraphTwoComponents.pred_graph_description(),
+                        
+                        GraphTwoComponents.desc_tooltip()
                     ],
                     style={'padding': '12px'}
                     ),
                     className="mb-3",
-                    style={'padding': '12px'}
+                    style={'padding': '12px'},
+                    id='description-graph2'
                 ),
                 md=8,
                 width = 18,
@@ -170,9 +177,9 @@ app.layout = html.Div( children=[
                 dbc.Card(
                         dbc.CardBody([
                             html.H5('Select Location'),
-                            html.P('Choose multiple locations to compare trends.'),
+                            html.P('Choose a location to view the average erergy usage.'),
                             #    id='select-multi'),
-                            html.P('Choose a location to compare actual and predicted trends.',
+                            html.P('Each location contains actual and predicted data.',
                                    #    id='select-multi2',
                                    ),
                             dcc.Dropdown(
@@ -196,7 +203,9 @@ app.layout = html.Div( children=[
             )
         ]),
     ])
-])
+],
+id='body'
+)
 
 
 @app.callback([
