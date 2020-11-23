@@ -27,7 +27,7 @@ class PredictivePlot:
         self.dfs = self.reader.get_df_for_file(filename)
         self.labels = [filename.split('_')[0] for filename in self.names]
 
-    def create_graph2(self, df, timeframe='Hour'):
+    def create_graph2(self, filtered_df, timeframe='Hour'):
             """ Create graph using sub_plots 
             
             Keywork arguments:
@@ -35,9 +35,9 @@ class PredictivePlot:
             timeframe -- the amount of time you want to display
             """
             
-            new_df = df
-            mask  = (new_df['Datetime'] > '2020-01-01')
-            filtered_df = new_df.loc[mask]
+            # new_df = df
+            mask  = (filtered_df['Datetime'] > '2020-01-01')
+            filtered_df = filtered_df.loc[mask]
 
             # Create filtered df showing only 2020 and up
             dtime = pd.DataFrame(filtered_df)
@@ -59,6 +59,8 @@ class PredictivePlot:
                 new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.month).mean()
             else:
                 raise ValueError('invalid timeframe input')
+
+            print(new_avg_df)
 
             # Create the figure
             fig = go.Figure()
