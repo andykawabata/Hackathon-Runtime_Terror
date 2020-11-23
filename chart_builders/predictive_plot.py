@@ -9,18 +9,13 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from data_processing.read_csv import Data
 from data_processing.group_data import GroupData
-import datetime
+from datetime import date
 
 """ Predictive graph shows average usage and average predicted usage """
 class PredictivePlot:
-    day_dict = {'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
-                'Thursday': 4, 'Friday': 5, 'Saturday': 6}
 
-    month_dict = {'January':0, 'February':1, 'March':2, 'April':3, 'May':4,
-                  'June':5, 'July':6, 'August': 7, 'September': 8, 'October':9,
-                  'November': 10, 'December': 11}
 
-    def __init__(self, filename):
+    def __init__(self, filename, start_date, end_date):
         """Initialize variables and data 
         
         Keywork arguments:
@@ -33,6 +28,20 @@ class PredictivePlot:
         self.dfs = self.reader.get_df_for_file(filename)
         self.labels = [filename.split('_')[0] for filename in self.names]
 
+        # Parse start date and end date
+        start_date_object = date.fromisoformat(start_date)
+        end_date_object = date.fromisoformat(end_date)
+        self.start_date = start_date_object.strftime('%Y-%m-%d')
+        self.end_date = end_date_object.strftime('%Y-%m-%d')
+
+        # Dictionaries to help sort days of the week / months of the year
+        self.day_dict = {'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
+                         'Thursday': 4, 'Friday': 5, 'Saturday': 6}
+
+        self.month_dict = {'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4,
+                           'June': 5, 'July': 6, 'August': 7, 'September': 8, 'October': 9,
+                           'November': 10, 'December': 11}
+
     def create_graph2(self, filtered_df, timeframe='Hour'):
 
             """ Create graph using sub_plots
@@ -43,7 +52,7 @@ class PredictivePlot:
             """
 
             # new_df = df
-            mask  = (filtered_df['Datetime'] > '2020-01-01')
+            mask = ((filtered_df['Datetime'] >= self.start_date) & (filtered_df['Datetime'] <= self.end_date))
             filtered_df = filtered_df.loc[mask]
 
             # Create filtered df showing only 2020 and up
