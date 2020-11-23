@@ -13,6 +13,7 @@ from classes.actual_plot import ActualPlot
 from classes.label_mapper import LabelMapper
 import dash_bootstrap_components as dbc
 from layout.graph_one_components import GraphOneComponents
+from layout.graph_two_components import  GraphTwoComponents
 
 external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css']
 
@@ -26,13 +27,33 @@ files = Data().get_all_file_names()
 for pair in filenames_labels:
     locations.append({'label': pair['label'], 'value': pair['filename']})
 
-app.layout = html.Div( children=[
+# Navigation bar
+navbar = dbc.NavbarSimple(
+    children=[
+        dbc.NavItem(dbc.NavLink("True Data Graph", href="#/actual-graph")),
+        dbc.NavItem(dbc.NavLink("Average Data Graph", href="predicted-graph")),
+        dbc.NavItem(dbc.NavLink("Map", href="#")),
+    ],
+    brand="UNCG Energy Dashboard",
+    brand_href="actual-graph",
+    color="#0b1b3f",
+    dark=True,
+    # style={'position': 'fixed', 'zIndex': 999, 'width': '100%'}
+    
+)
 
+app.layout = html.Div( children=[
+    navbar,
     dbc.Container([
         ###############################################################################################
         ## GRAPH 1
-        html.H3('Energy Consuption at UNCG by Location', className='mt-2'),
-        html.P('Further description of graph.'),
+        html.Span([
+            html.H3('Energy Consuption at UNCG by Location', 
+            className='mt-2', id='actual-graph', 
+            style={'background-color': '#ffb71c', 'padding': '6px'}),
+        ]),
+        # html.H3('Energy Consuption at UNCG by Location', className='mt-2', id='actual-graph'),
+        html.H6('Further description of graph.', style={'padding': '12px'}),
         dbc.Row([
             dbc.Col(
                 dbc.Card(
@@ -107,25 +128,74 @@ app.layout = html.Div( children=[
 
         ###############################################################################################
         ## GRAPH 2
-        dcc.RadioItems(
-                    id='time-select-pred',
-                    options=[
-                        {'label': 'Hourly', 'value': 'Hour'},
-                        {'label': 'Daily', 'value': 'Day'},
-                        {'label': 'Weekly', 'value': 'Week'},
-                        {'label': 'Monthly', 'value': 'Month'}
+        html.Span([
+            html.H3('Average Energy Consuption by Location', 
+            className='mt-2', id='predicted-graph', 
+            style={'background-color': '#ffb71c', 'padding': '6px'}),
+        ]),
+        html.H6('Further description of graph.', style={'padding': '12px'}),
+
+        dbc.Row([
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardBody([
+                        html.H6('Time Frame'),
+                        GraphTwoComponents.radio_pred()
                     ],
-                    value='Day',
-                    labelStyle={'display': 'inline-block'}
+                        style={'padding': '12px'}
+                    ),
+                    className="mb-3",
+
                 ),
-        html.Div(id='output-container-date-picker-range'),
-        html.Div(id='predictive-graph-container', children=[]),
-        dcc.Dropdown(
-            id='building-names-pred',
-            options=locations,
-            value=filenames_labels[0]['filename'],
-            multi=False
-        )])
+                md=4
+            ),
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardBody([
+                        html.H6('Description'),
+                        GraphTwoComponents.pred_graph_description(),
+                    ],
+                    style={'padding': '12px'}
+                    ),
+                    className="mb-3",
+                    style={'padding': '12px'}
+                ),
+                md=8,
+                width = 18,
+            )
+        ]),
+
+        dbc.Row([
+            dbc.Col(
+                dbc.Card(
+                        dbc.CardBody([
+                            html.H5('Select Location'),
+                            html.P('Choose multiple locations to compare trends.'),
+                            #    id='select-multi'),
+                            html.P('Choose a location to compare actual and predicted trends.',
+                                   #    id='select-multi2',
+                                   ),
+                            dcc.Dropdown(
+                                id='building-names-pred',
+                                options=locations,
+                                value=filenames_labels[0]['filename'],
+                                multi=False,
+                            )
+                        ]),
+                        style={'height': '80%'},
+                    ),
+                    
+                md=3
+            ),
+            dbc.Col(
+                html.Div(id='predictive-graph-container', children=[
+                    dcc.Graph(
+                    )
+                ]),
+                md=9
+            )
+        ]),
+    ])
 ])
 
 
