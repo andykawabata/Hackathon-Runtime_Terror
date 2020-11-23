@@ -13,6 +13,12 @@ import datetime
 
 """ Predictive graph shows average usage and average predicted usage """
 class PredictivePlot:
+    day_dict = {'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
+                'Thursday': 4, 'Friday': 5, 'Saturday': 6}
+
+    month_dict = {'January':0, 'February':1, 'March':2, 'April':3, 'May':4,
+                  'June':5, 'July':6, 'August': 7, 'September': 8, 'October':9,
+                  'November': 10, 'December': 11}
 
     def __init__(self, filename):
         """Initialize variables and data 
@@ -28,13 +34,14 @@ class PredictivePlot:
         self.labels = [filename.split('_')[0] for filename in self.names]
 
     def create_graph2(self, filtered_df, timeframe='Hour'):
-            """ Create graph using sub_plots 
-            
+
+            """ Create graph using sub_plots
+
             Keywork arguments:
             filename -- the filename of csv data to display in the graph
             timeframe -- the amount of time you want to display
             """
-            
+
             # new_df = df
             mask  = (filtered_df['Datetime'] > '2020-01-01')
             filtered_df = filtered_df.loc[mask]
@@ -47,20 +54,25 @@ class PredictivePlot:
             # Determine the timeframe to display
             if timeframe == 'Hour':
                 tf_abbv = "H"
-                new_avg_df = filtered_df.groupby(filtered_df.Datetime.dt.hour).mean()
+                filtered_df['hour'] = filtered_df['Datetime'].dt.time
+                new_avg_df = filtered_df.groupby('hour').mean()
             elif timeframe == 'Day':
                 tf_abbv = "D"
-                new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.dayofweek).mean()
+                filtered_df['day'] = filtered_df['Datetime'].dt.day_name()
+                new_avg_df = filtered_df.groupby('day').mean()
+                new_avg_df['day_copy'] = new_avg_df.index
+                new_avg_df = new_avg_df.sort_values(by='day_copy', key=lambda x: x.map(self.day_dict))
             elif timeframe == 'Week':
                 tf_abbv = "W"
                 new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.week).mean()
             elif timeframe == 'Month':
                 tf_abbv = "M"
-                new_avg_df = filtered_df.groupby(filtered_df['Datetime'].dt.month).mean()
+                filtered_df['month'] = filtered_df['Datetime'].dt.month_name()
+                new_avg_df = filtered_df.groupby('month').mean()
+                new_avg_df['month_copy'] = new_avg_df.index
+                new_avg_df = new_avg_df.sort_values(by='month_copy', key=lambda x: x.map(self.month_dict))
             else:
                 raise ValueError('invalid timeframe input')
-
-            print(new_avg_df)
 
             # Create the figure
             fig = go.Figure()
