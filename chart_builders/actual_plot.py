@@ -1,5 +1,5 @@
-from classes.group_data import GroupData
-from classes.group_data_multiple import GroupDataMultiple
+from data_processing.group_data import GroupData
+from data_processing.group_data_multiple import GroupDataMultiple
 import plotly.express as px
 import dash_core_components as dcc
 
