@@ -1,27 +1,21 @@
 import pandas as pd
 
-from classes.label_mapper import LabelMapper
+from data_processing.label_mapper import LabelMapper
 
-class GroupDataMultiple:
+class GroupData:
 
     def __init__(self):
         return
 
     @staticmethod
-    def get_hourly(filenames, columns):
+    def get_hourly(filenames, column):
         label_map = LabelMapper.map_to_dictionary()
         base_path = './data/Analysis/'
         merged = pd.DataFrame()
-        columns.append('Datetime')
-        # merge given files and columns into a single data frame
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
-            df = df[columns]
-            for index, column in enumerate(columns):
-                # create string to append after building name
-                string_to_append = ' - ' + column if len(columns) > 2 else ''
-                if column != 'Datetime':
-                    df = df.rename(columns={columns[index]: label_map[filenames[i]] + string_to_append})
+            df = df[['Datetime', column]]
+            df = df.rename(columns={column: label_map[filenames[i]]})
             if merged.empty:
                 merged = df
                 continue
@@ -30,21 +24,14 @@ class GroupDataMultiple:
         return merged
 
     @staticmethod
-    def get_daily(filenames, is_total, columns):
+    def get_daily(filenames, is_total, column):
         label_map = LabelMapper.map_to_dictionary()
         merged = pd.DataFrame()
         base_path = './data/Analysis/'
-        columns.append('Datetime')
-        # merge given files and columns into a single data frame
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
-            df = df[columns]
-            # rename columns to the building name + the category
-            for index, column in enumerate(columns):
-                # create string to append after building name
-                string_to_append = ' - ' + column if len(columns) > 2 else ''
-                if column != 'Datetime':
-                    df = df.rename(columns={columns[index]: label_map[filenames[i]] + string_to_append})
+            df = df[['Datetime', column]]
+            df = df.rename(columns={column: label_map[filenames[i]]})
             if merged.empty:
                 merged = df
                 continue
@@ -62,19 +49,13 @@ class GroupDataMultiple:
         return daily
 
     @staticmethod
-    def get_weekly(filenames, is_total, columns):
-        label_map = LabelMapper.map_to_dictionary()
+    def get_weekly(filenames, is_total, column):
         merged = pd.DataFrame()
         base_path = './data/Analysis/'
-        columns.append('Datetime')
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
-            df = df[columns]
-            for index, column in enumerate(columns):
-                # create string to append after building name
-                string_to_append = ' - ' + column if len(columns) > 2 else ''
-                if column != 'Datetime':
-                    df = df.rename(columns={columns[index]: label_map[filenames[i]] + string_to_append})
+            df = df[['Datetime', column]]
+            df = df.rename(columns={column: filenames[i]})
             if merged.empty:
                 merged = df
                 continue
@@ -92,19 +73,13 @@ class GroupDataMultiple:
         return weekly
 
     @staticmethod
-    def get_monthly(filenames, is_total, columns):
-        label_map = LabelMapper.map_to_dictionary()
+    def get_monthly(filenames, is_total, column):
         merged = pd.DataFrame()
         base_path = './data/Analysis/'
-        columns.append('Datetime')
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
-            df = df[columns]
-            for index, column in enumerate(columns):
-                # create string to append after building name
-                string_to_append = ' - ' + column if len(columns) > 2 else ''
-                if column != 'Datetime':
-                    df = df.rename(columns={columns[index]: label_map[filenames[i]] + string_to_append})
+            df = df[['Datetime', column]]
+            df = df.rename(columns={column: filenames[i]})
             if merged.empty:
                 merged = df
                 continue

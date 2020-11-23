@@ -7,8 +7,8 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-from classes.read_csv import Data
-from classes.group_data import GroupData
+from data_processing.read_csv import Data
+from data_processing.group_data import GroupData
 import datetime
 
 """ Predictive graph shows average usage and average predicted usage """
