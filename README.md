@@ -9,7 +9,7 @@
 
 ## General Info
 
-For the 2020 UNCG Green Fund Hackathon, teams were tasked with creating an interactive dashboard reflecting the energy consumption for the UNCG campus. This dashboard will be used to aid the UNCG Facilities Operations in making decisions. 
+For the 2020 UNCG Green Fund Hackathon, teams were tasked with creating an interactive dashboard reflecting the energy consumption for the UNCG campus. All actual data comes from 81 meters placed across the campus which started tracking data in 2015. The predicted data was previously found by using linear models. This dashboard will be used to aid the UNCG Facilities Operations in making decisions. 
 
 ## Functionality
 
