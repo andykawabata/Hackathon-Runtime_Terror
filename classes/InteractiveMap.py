@@ -38,8 +38,8 @@ def create_building_average_plot():
             df_stat_data = pd.read_csv(prefix_file_path + file_name + suffix_file_path)
         except:
             continue
-        avg_24_hr_actual = df_stat_data.Actual[0:25].mean()
-        avg_24_hr_predicted = df_stat_data.Predicted[0:25].mean()
+        avg_24_hr_actual = df_stat_data.Actual[-24:].mean()
+        avg_24_hr_predicted = df_stat_data.Predicted[-24:].mean()
         figure.add_trace(
             go.Scattermapbox(
                 # Fill inner area.
