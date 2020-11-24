@@ -116,14 +116,14 @@ app.layout = html.Div( children=[
                             options=locations,
                             value=filenames_labels[0]['filename'],
                             multi=True,
-
+                            optionHeight=50
                         ),
                         GraphOneComponents.drop_down_tooltip()
                     ],
                     id='graph-1-dd',
                     ),
                     
-                    style={'height': '80%'},
+                    style={'height': '100%'},
                 ),
                 md=3
             ),
@@ -207,7 +207,7 @@ app.layout = html.Div( children=[
                                 options=locations,
                                 value=filenames_labels[0]['filename'],
                                 multi=False,
-
+                                optionHeight=50
                             ),
                             GraphTwoComponents.dd_tooltip()
                         ]),
