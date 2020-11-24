@@ -18,15 +18,17 @@ Our dashboard displays an interactive map of all the buildings on the UNCG campu
 ## How to Run
 
 To display the dashboard:
-1. Install the requirements.txt
-2. Run this app with `python app.py`
-3. Visit http://127.0.0.1:8050/ in your web browser
+1. Download or Clone this repository
+2. Install the requirements with `pip install -r requirements.txt`
+3. Run this app with `python app.py`
+4. Visit http://127.0.0.1:8050/ in your web browser
 
 ## About the Team
 
-**Christopher Brantley**
+**Christopher Brantley**  
+*"Christopher is a senior in the Computer Science program with a concentration in Data Science and is minoring in mathematics. He has been studying programming for five years. He enjoys persuing good software design, playing with web design, and learning the features of languages. He plans to graduate in the spring of 2021 and join the graduate program in Fall 2021. In his free time Christopher enjoys hiking, playing the guitar, and reading."*    
 
-**Andrew Kawabata**  
+**Andy Kawabata**  
 *"Since I began coding a few years ago, I have been dedicated to increasing my understanding in all aspects of computer science and building useful applications. I love being able to use data to help further our understanding of the world we live in. I'm currently a senior UNCG and work as a tutor in the computer science department."*
 
 **Kyle Supple**  

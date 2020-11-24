@@ -1,4 +1,3 @@
-from data_processing.group_data import GroupData
 from data_processing.group_data_multiple import GroupDataMultiple
 import plotly.express as px
 import dash_core_components as dcc
@@ -26,7 +25,10 @@ class ActualPlot:
             df = GroupDataMultiple.get_weekly(filenames, is_total, columns)
         else:
             df = GroupDataMultiple.get_monthly(filenames, is_total, columns)
+
+
         fig = px.line(df)
+        fig.update_yaxes(title_text='Energy Usage (kw/hr)')
         fig.update_layout(
             xaxis=dict(
                 rangeselector=dict(
@@ -58,5 +60,6 @@ class ActualPlot:
         )
         graph = dcc.Graph(
             figure=fig
+
         )
         return graph
