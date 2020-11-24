@@ -113,7 +113,7 @@ app.layout = html.Div( children=[
                             multi=True,
                         )
                     ]),
-                    style={'height': '80%'},
+                    style={'height': '100%'},
                 ),
                 md=3
             ),
@@ -141,7 +141,7 @@ app.layout = html.Div( children=[
             dbc.Col(
                 dbc.Card(
                     dbc.CardBody([
-                        html.H6('Time Frame'),
+                        html.H6('Time Frame', className='p-0'),
                         GraphTwoComponents.radio_pred(),
                         GraphTwoComponents.tf_tooltip()
                     ],
@@ -156,10 +156,20 @@ app.layout = html.Div( children=[
             dbc.Col(
                 dbc.Card(
                     dbc.CardBody([
-                        html.H6('Description'),
-                        GraphTwoComponents.pred_graph_description(),
-                        
-                        GraphTwoComponents.desc_tooltip()
+                        dbc.Row([
+                            dbc.Col([
+                                html.H6('Select Date Range')
+                                ], md=4
+                            ),
+                            dbc.Col([
+                                GraphTwoComponents.date_picker(),
+                                GraphTwoComponents.desc_tooltip()
+                                ], md=8
+
+                            ),
+
+                        ]),
+
                     ],
                     style={'padding': '12px'}
                     ),
@@ -189,7 +199,7 @@ app.layout = html.Div( children=[
                                 multi=False,
                             )
                         ]),
-                        style={'height': '80%'},
+                        style={'height': '100%'},
                     ),
                     
                 md=3
@@ -262,8 +272,10 @@ def update_output(filenames, time_select, avg_total, actual_predicted):
 @app.callback(
     dash.dependencies.Output('predictive-graph-container', 'children'),
     [dash.dependencies.Input('building-names-pred', 'value'),
-     dash.dependencies.Input('time-select-pred', 'value')])
-def update_output(filename, time_select_pred):
+     dash.dependencies.Input('time-select-pred', 'value'),
+     dash.dependencies.Input('date-picker-range', 'start_date'),
+     dash.dependencies.Input('date-picker-range', 'end_date')])
+def update_output(filename, time_select_pred, start_date, end_date):
     """
     This callback fires when the building-names-pred dropdown, and time period
     selection fields are changed in the view
@@ -272,7 +284,8 @@ def update_output(filename, time_select_pred):
     :param time_select_pred: hourly, daily, weekly, monthly
     :return: a multi-line graph based on the inputs
     """
-    predictive_graph = PredictivePlot(filename[0])
+
+    predictive_graph = PredictivePlot(filename[0], start_date, end_date)
     graph = predictive_graph.create_graph2(Data().get_df_for_file(filename), time_select_pred)
     return graph
 
