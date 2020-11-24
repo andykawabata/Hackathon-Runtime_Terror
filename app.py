@@ -175,18 +175,18 @@ app.layout = html.Div( children=[
                             ),
                             dbc.Col([
                                 GraphTwoComponents.date_picker(),
-                                GraphTwoComponents.desc_tooltip()
-                                ], md=8
-
+                                GraphTwoComponents.date_selector_tooltip()
+                                ], 
+                            md=8,
+                            
                             ),
-
                         ]),
                     ],
+                    id='date-selector',
                     style={'padding': '12px'}
                     ),
                     className="mb-3",
                     style={'padding': '12px'},
-                    id='description-graph2'
                 ),
                 md=8,
                 width = 18,
@@ -212,7 +212,7 @@ app.layout = html.Div( children=[
                             GraphTwoComponents.dd_tooltip()
                         ]),
                         style={'height': '100%'},
-
+                        id='drop-down-graph2',
                     ),
                     
                 md=3
