@@ -21,7 +21,10 @@ h6 {
     padding-top: 10px;
 }
 
-
+.bottomitem {
+    position: center;
+    padding-left: 10%;
+}
 
 .navbar {
     position: fixed;
