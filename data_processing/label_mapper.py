@@ -27,6 +27,8 @@ class LabelMapper:
             # build label and append to dict
             long_label = row['Label']
             label = long_label.split(' (')[0]
+            if 'Kaplan Center for Wellness' in long_label:
+                label = LabelMapper.handle_kaplan(long_label)
             label = label.replace(u'\xa0', u'')
 
             # add to dictionary
@@ -58,6 +60,8 @@ class LabelMapper:
             # build label and append to dict
             long_label = row['Label']
             label = long_label.split(' (')[0]
+            if 'Kaplan Center for Wellness' in long_label:
+                label = LabelMapper.handle_kaplan(long_label)
             label = label.replace(u'\xa0', u'')
 
             # add to dictionary
@@ -91,9 +95,18 @@ class LabelMapper:
             # build label and append to dict
             long_label = row['Label']
             label = long_label.split(' (')[0]
+            if 'Kaplan Center for Wellness' in long_label:
+                label = LabelMapper.handle_kaplan(long_label)
             pair['label'] = label
 
             # add filename/label pair to list
             labels_filenames.append(pair)
             pair['filename'] = filename.replace(u'\xa0', '')
         return labels_filenames
+
+    @staticmethod
+    def handle_kaplan(long_label):
+        left = 'Kaplan Center'
+        right = long_label.split(')')[1]
+        return left + right
+
