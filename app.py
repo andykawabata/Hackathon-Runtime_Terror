@@ -31,9 +31,9 @@ for pair in filenames_labels:
 # Navigation bar
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("Map", href="#top")),
-        dbc.NavItem(dbc.NavLink("True Data Graph", href="#middle")),
-        dbc.NavItem(dbc.NavLink("Average Data Graph", href="#bottom")),
+        dbc.NavItem(dbc.NavLink("Home", href="#top")),
+        # dbc.NavItem(dbc.NavLink("True Data Graph", href="#middle")),
+        # dbc.NavItem(dbc.NavLink("Average Data Graph", href="#bottom")),
     ],
     brand="UNCG Energy Dashboard",
     brand_href="actual-graph",
