@@ -67,9 +67,11 @@ class GroupDataMultiple:
         merged = pd.DataFrame()
         base_path = './data/Analysis/'
         columns.append('Datetime')
+        # merge given files and columns into a single data frame
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
             df = df[columns]
+            # rename columns to the building name + the category
             for index, column in enumerate(columns):
                 # create string to append after building name
                 string_to_append = ' - ' + column if len(columns) > 2 else ''
@@ -79,7 +81,7 @@ class GroupDataMultiple:
                 merged = df
                 continue
             merged = pd.merge(merged, df, on="Datetime")
-
+        # Adding a Week column and grouping the data by week
         merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
         merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
         merged['Week'] = merged['Datetime'].dt.to_period(freq = 'W').apply(lambda r: r.start_time)
@@ -97,9 +99,11 @@ class GroupDataMultiple:
         merged = pd.DataFrame()
         base_path = './data/Analysis/'
         columns.append('Datetime')
+        # merge given files and columns into a single data frame
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
             df = df[columns]
+            # rename columns to the building name + the category
             for index, column in enumerate(columns):
                 # create string to append after building name
                 string_to_append = ' - ' + column if len(columns) > 2 else ''
@@ -109,7 +113,7 @@ class GroupDataMultiple:
                 merged = df
                 continue
             merged = pd.merge(merged, df, on="Datetime")
-
+        # Adding a Month column and grouping the data by Month
         merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
         merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
         merged['Month'] = merged['Datetime'].dt.to_period(freq = 'M').apply(lambda r: r.start_time)
@@ -125,6 +129,7 @@ class GroupDataMultiple:
     def get_yearly(filenames, is_total, column):
         merged = pd.DataFrame()
         base_path = './data/Analysis/'
+        # merge given files and columns into a single data frame
         for i in range(0, len(filenames)):
             df = pd.read_csv(base_path + filenames[i])
             df = df[['Datetime', column]]
@@ -133,7 +138,7 @@ class GroupDataMultiple:
                 merged = df
                 continue
             merged = pd.merge(merged, df, on="Datetime")
-
+        # Adding a Year column and grouping the data by year
         merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
         merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
         merged['Year'] = merged['Datetime'].dt.to_period(freq = 'Y').apply(lambda r: r.start_time)

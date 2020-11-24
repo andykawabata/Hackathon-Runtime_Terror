@@ -36,7 +36,7 @@ class GroupData:
                 merged = df
                 continue
             merged = pd.merge(merged, df, on="Datetime")
-
+        # Adding a Day column and grouping the data by day
         merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
         merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
         merged['Day'] = merged['Datetime'].dt.to_period("D")
@@ -60,7 +60,7 @@ class GroupData:
                 merged = df
                 continue
             merged = pd.merge(merged, df, on="Datetime")
-
+        # Adding a Week column and grouping the data by week
         merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
         merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
         merged['Week'] = merged['Datetime'].dt.to_period(freq = 'W').apply(lambda r: r.start_time)
@@ -84,7 +84,7 @@ class GroupData:
                 merged = df
                 continue
             merged = pd.merge(merged, df, on="Datetime")
-
+        # Adding a Month column and grouping the data by Month
         merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
         merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
         merged['Month'] = merged['Datetime'].dt.to_period(freq = 'M').apply(lambda r: r.start_time)
@@ -108,7 +108,7 @@ class GroupData:
                 merged = df
                 continue
             merged = pd.merge(merged, df, on="Datetime")
-
+        # Adding a Year column and grouping the data by year
         merged['Datetime'] = merged['Datetime'].apply(lambda x: x[:19])
         merged['Datetime'] = pd.to_datetime(merged['Datetime'], errors='coerce')
         merged['Year'] = merged['Datetime'].dt.to_period(freq = 'Y').apply(lambda r: r.start_time)
