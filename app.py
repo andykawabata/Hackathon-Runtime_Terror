@@ -48,7 +48,7 @@ app.layout = html.Div( children=[
     navbar,
     # Html Definition for Interactive Plotly Graph
     dbc.Container([
-        InteractiveMap.return_html_def_building_plot(),
+        
         ###############################################################################################
         ## GRAPH 1
         html.Span([
@@ -137,7 +137,7 @@ app.layout = html.Div( children=[
         ]),
 
 
-
+        
         ###############################################################################################
         ## GRAPH 2
         # dbc.Container(html.Center(html.H3("Average Energy Consuption by Location", id='bottom', className = "mt-2"))),
@@ -227,7 +227,8 @@ app.layout = html.Div( children=[
         ]),
     ],
     id='body'
-    )
+    ),
+    InteractiveMap.return_html_def_building_plot(),
 ],
     id='head'
 )
