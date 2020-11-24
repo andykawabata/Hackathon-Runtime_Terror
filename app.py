@@ -8,7 +8,9 @@ from data_processing.label_mapper import LabelMapper
 from chart_builders import InteractiveMap
 import dash_bootstrap_components as dbc
 from layout.graph_one_components import GraphOneComponents
+from layout.descriptions import Descriptions
 from layout.graph_two_components import GraphTwoComponents
+
 
 style1 = 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'
 style2 = 'styles/style.css'
@@ -47,12 +49,15 @@ app.layout = html.Div(children=[
         ###############################################################################################
         ## GRAPH 1
         html.Span([
-            html.H3('Energy Consuption by Location',
-                    className='mt-2'
-                    ),
-            html.P(id="middle"),
+            html.H3('Energy Consumption Across UNCG',
+            className='mb-0'
+            )
         ]),
-        html.H6('Further description of graph.'),
+        html.Div(
+            html.P(Descriptions.graph_one(), style={'padding': '3px 5px'}),
+            className='description-block'
+        ),
+
         dbc.Row([
             dbc.Col(
                 dbc.Card(
@@ -135,13 +140,17 @@ app.layout = html.Div(children=[
         ## GRAPH 2
         # dbc.Container(html.Center(html.H3("Average Energy Consuption by Location", id='bottom', className = "mt-2"))),
         html.Span([
-            html.H3('Average Energy Consuption by Location',
-                    className='mt-2'
-                    ),
-            html.P(id="bottom"),
-        ]),
-        html.H6('Further description of graph.'),
 
+            html.H3('Actual vs. Predicted Energy Consuption for 2020',
+            className='mb-0 mt-5'
+            )
+            #html.P(id="bottom"),
+
+        ]),
+        html.Div(
+            html.P(Descriptions.graph_two(), style={'padding': '3px 5px'}),
+            className="description-block"
+        ),
         dbc.Row([
             dbc.Col(
                 dbc.Card(
@@ -215,14 +224,29 @@ app.layout = html.Div(children=[
                 md=9
             )
         ]),
+        html.Div([
+            html.Span([
+                html.H3('Average Energy Consumption Over the Last 24 Hours',
+                className='mb-0 mt-5'
+                )
+                #html.P(id="bottom"),
+            ]),
+            html.Div(
+                html.P(Descriptions.map(), style={'padding': '3px 5px'}),
+                className="description-block"
+            ),
+            InteractiveMap.return_html_def_building_plot()
+            ],
+            className='d-none d-md-block'
+        ),
+        html.Div([
+             html.Center(html.P('Paid for by UNCG Green Fund')),
+            ])
     ],
         id='body'
     ),
-    InteractiveMap.return_html_def_building_plot(),
-    html.Div([
-        html.P('Paid for by UNCG Green Fund'),
-    ],
-        style={'padding-left': '10%'})
+
+
 ],
     id='head'
 )
@@ -297,11 +321,11 @@ def update_output(filename, time_select_pred, start_date, end_date):
     :return: a multi-line graph based on the inputs
     """
 
-    predictive_graph = PredictivePlot(filename[0], start_date, end_date)
+    predictive_graph = PredictivePlot(filename, start_date, end_date)
     graph = predictive_graph.create_graph2(
         Data().get_df_for_file(filename), time_select_pred)
     return graph
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)

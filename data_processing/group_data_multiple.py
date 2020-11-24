@@ -26,7 +26,8 @@ class GroupDataMultiple:
                 merged = df
                 continue
             merged = pd.merge(merged, df, on="Datetime")
-        merged = merged.set_index('Datetime')
+        merged = merged.rename(columns={'Datetime': 'Hour'})
+        merged = merged.set_index('Hour')
         return merged
 
     @staticmethod

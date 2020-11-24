@@ -8,7 +8,6 @@ import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from data_processing.read_csv import Data
-from data_processing.group_data import GroupData
 from datetime import date
 
 """ Predictive graph shows average usage and average predicted usage """
@@ -98,7 +97,7 @@ class PredictivePlot:
             fig.update_layout(hovermode='x unified')
             fig.update_layout(title="Average Energy Usage for each {} in 2020.".format(timeframe))
             fig.update_xaxes(title_text=timeframe)
-            fig.update_yaxes(title_text='Energy Usage')
+            fig.update_yaxes(title_text='Energy Usage (kw/hr)')
             predictive = dcc.Graph(
                 id='example-graph',
                 figure=fig
