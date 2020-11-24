@@ -53,11 +53,15 @@ app.layout = html.Div( children=[
         ## GRAPH 1
         html.Span([
             html.H3('Energy Consuption by Location',
-            className='mt-2'
+            className='mb-0'
             ),
-            html.P(id="middle"),
+            #html.P(id="middle"),
         ]),
-        html.H6('Further description of graph.'),
+        html.Div(
+            html.H6('Further description of graph.'),
+            className='description-block'
+        ),
+
         dbc.Row([
             dbc.Col(
                 dbc.Card(
@@ -143,12 +147,14 @@ app.layout = html.Div( children=[
         # dbc.Container(html.Center(html.H3("Average Energy Consuption by Location", id='bottom', className = "mt-2"))),
         html.Span([
             html.H3('Average Energy Consuption by Location', 
-            className='mt-2'
-            ),
-            html.P(id="bottom"),
+            className='mb-0 mt-5'
+            )
+            #html.P(id="bottom"),
         ]),
-        html.H6('Further description of graph.'),
-
+        html.Div(
+            html.H6('Further description of graph.'),
+            className="description-block"
+        ),
         dbc.Row([
             dbc.Col(
                 dbc.Card(
@@ -225,10 +231,21 @@ app.layout = html.Div( children=[
                 md=9
             )
         ]),
+        html.Span([
+            html.H3('Average Energy Consuption by Location',
+            className='mb-0 mt-5'
+            )
+            #html.P(id="bottom"),
+        ]),
+        html.Div(
+            html.H6('Further description of graph.'),
+            className="description-block"
+        ),
+        InteractiveMap.return_html_def_building_plot(),
     ],
     id='body'
     ),
-    InteractiveMap.return_html_def_building_plot(),
+
 ],
     id='head'
 )
