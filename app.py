@@ -146,7 +146,7 @@ app.layout = html.Div( children=[
         ## GRAPH 2
         # dbc.Container(html.Center(html.H3("Average Energy Consuption by Location", id='bottom', className = "mt-2"))),
         html.Span([
-            html.H3('Average Energy Consuption by Location', 
+            html.H3('Actual vs. Predicted Energy Consuption for 2020',
             className='mb-0 mt-5'
             )
             #html.P(id="bottom"),
@@ -232,7 +232,7 @@ app.layout = html.Div( children=[
             )
         ]),
         html.Span([
-            html.H3('Average Energy Consuption by Location',
+            html.H3('Average Energy Consumption Over the Last 24 Hours',
             className='mb-0 mt-5'
             )
             #html.P(id="bottom"),
