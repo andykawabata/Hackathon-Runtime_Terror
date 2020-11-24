@@ -90,7 +90,7 @@ def return_html_def_building_plot():
     # Retrieves the interactive plotly figure and the configuration info.
     figure, plotly_configuration = create_building_average_plot()
     html_def = html.Center([
-        dbc.Container(html.Center(html.H3("UNCG Daily Energy Consumption", className = "mt-2"))),
+        dbc.Container(html.Center(html.H3("UNCG Daily Energy Consumption", id='top', className = "mt-2"))),
         dcc.Graph(
             id = "interactive_map",
             figure = figure,

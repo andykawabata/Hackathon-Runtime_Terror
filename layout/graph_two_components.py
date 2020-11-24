@@ -33,7 +33,7 @@ class GraphTwoComponents:
     @staticmethod
     def tf_tooltip():
         tt = dbc.Tooltip(
-            "Select to view the average or actual energy usage.",
+            "Select to change the timeframe displayed in graph.",
             target="timeframe-graph2",
         )
         return tt
@@ -49,7 +49,7 @@ class GraphTwoComponents:
     @staticmethod
     def dd_tooltip():
         tt = dbc.Tooltip(
-            "Select to view the average or actual energy usage.",
+            "Select a building to view its average energy consumption.",
             target="drop-down-graph2",
         )
         return tt
@@ -57,8 +57,8 @@ class GraphTwoComponents:
     @staticmethod
     def graph_tooltip():
         tt = dbc.Tooltip(
-            "Select to view the average or actual energy usage.",
-            target="timeframe-graph2",
+            "Hover over the graph to view the average and predicted energy usage valeus for the selected timeframe.",
+            target="predictive-graph-container",
         )
         return tt
 
