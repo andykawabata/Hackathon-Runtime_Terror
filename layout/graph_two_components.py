@@ -1,6 +1,7 @@
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
+from datetime import date
 
 class GraphTwoComponents:
 
@@ -16,7 +17,7 @@ class GraphTwoComponents:
             ],
             value='Day',
             labelStyle={'display': 'inline-block',
-                        'padding': '4px 12px 3px 5px',
+                        'padding': '4px 12px 0px 5px',
                         'font-size': '.9rem'},
             inputStyle={'margin-right': '4px'}
         )
@@ -62,5 +63,15 @@ class GraphTwoComponents:
         )
         return tt
 
-    
+    @staticmethod
+    def date_picker():
+        date_picker = dcc.DatePickerRange(
+            id='date-picker-range',
+            min_date_allowed= date(2020, 1, 1),
+            max_date_allowed=date(2020, 11, 1), #find a way to get latest date
+            initial_visible_month=date(2020, 1, 1),
+            start_date=date(2020, 1, 1),
+            end_date=date(2020, 11, 1)
 
+        )
+        return date_picker
