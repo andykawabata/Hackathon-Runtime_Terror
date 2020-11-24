@@ -12,6 +12,7 @@ from chart_builders import InteractiveMap
 import dash_bootstrap_components as dbc
 from layout.graph_one_components import GraphOneComponents
 from layout.graph_two_components import  GraphTwoComponents
+from layout.descriptions import Descriptions
 
 style1 = 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'
 style2 = 'styles/style.css'
@@ -58,7 +59,7 @@ app.layout = html.Div( children=[
             #html.P(id="middle"),
         ]),
         html.Div(
-            html.H6('Further description of graph.'),
+            html.P(Descriptions.graph_one(), style={'padding': '3px 5px'}),
             className='description-block'
         ),
 
@@ -152,7 +153,7 @@ app.layout = html.Div( children=[
             #html.P(id="bottom"),
         ]),
         html.Div(
-            html.H6('Further description of graph.'),
+            html.P(Descriptions.graph_two(), style={'padding': '3px 5px'}),
             className="description-block"
         ),
         dbc.Row([
@@ -231,17 +232,21 @@ app.layout = html.Div( children=[
                 md=9
             )
         ]),
-        html.Span([
-            html.H3('Average Energy Consumption Over the Last 24 Hours',
-            className='mb-0 mt-5'
-            )
-            #html.P(id="bottom"),
-        ]),
-        html.Div(
-            html.H6('Further description of graph.'),
-            className="description-block"
-        ),
-        InteractiveMap.return_html_def_building_plot(),
+        html.Div([
+            html.Span([
+                html.H3('Average Energy Consumption Over the Last 24 Hours',
+                className='mb-0 mt-5'
+                )
+                #html.P(id="bottom"),
+            ]),
+            html.Div(
+                html.P(Descriptions.map(), style={'padding': '3px 5px'}),
+                className="description-block"
+            ),
+            InteractiveMap.return_html_def_building_plot()
+            ],
+            className='d-none d-md-block'
+        )
     ],
     id='body'
     ),
