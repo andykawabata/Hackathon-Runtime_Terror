@@ -1,4 +1,7 @@
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
+import dash_html_components as html
+
 class GraphOneComponents:
 
     @staticmethod
@@ -51,4 +54,43 @@ class GraphOneComponents:
         )
         return radios
 
+    @staticmethod
+    def aggregate_type_tooltip():
+        desc = "The aggregate function will switch the graph between the average and total energy consumption for the selected time period."
+        tt = dbc.Tooltip(
+            desc,
+            target='aggregate-select'
+        )
+        return tt
 
+    @staticmethod
+    def timeframe_tooltip():
+        tt = dbc.Tooltip(
+            "Select a timeframe to view detailed corresponding data.",
+            target="timeframe-select",
+        )
+        return tt
+
+    @staticmethod
+    def value_type_tooltip():
+        tt = dbc.Tooltip(
+            "View the actual or the predicted data.",
+            target="value-type",
+        )
+        return tt
+
+    @staticmethod
+    def drop_down_tooltip():
+        tt = dbc.Tooltip(
+            "Select one or more buildings to view their average energy consumption. Note, you can't select multiple if values type is set to predicted.",
+            target="graph-1-dd",
+        )
+        return tt
+
+    @staticmethod
+    def graph_tooltip():
+        tt = dbc.Tooltip(
+            "Hover over the graph to view the average and predicted energy usage valeus for the selected timeframe.",
+            target="predictive-graph-container",
+        )
+        return tt

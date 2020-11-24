@@ -31,31 +31,32 @@ for pair in filenames_labels:
 # Navigation bar
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("True Data Graph", href="#/actual-graph")),
-        dbc.NavItem(dbc.NavLink("Average Data Graph", href="predicted-graph")),
-        dbc.NavItem(dbc.NavLink("Map", href="#")),
+        dbc.NavItem(dbc.NavLink("Map", href="#top")),
+        dbc.NavItem(dbc.NavLink("True Data Graph", href="#middle")),
+        dbc.NavItem(dbc.NavLink("Average Data Graph", href="#bottom")),
     ],
     brand="UNCG Energy Dashboard",
     brand_href="actual-graph",
     color="#0b1b3f",
     dark=True,
-    # style={'position': 'fixed', 'zIndex': 999, 'width': '100%'}
+    id='nav-bar'
     
 )
 
 app.layout = html.Div( children=[
+
     navbar,
     # Html Definition for Interactive Plotly Graph
-    InteractiveMap.return_html_def_building_plot(),
     dbc.Container([
+        InteractiveMap.return_html_def_building_plot(),
         ###############################################################################################
         ## GRAPH 1
         html.Span([
-            html.H3('Energy Consuption by Location', 
-            className='mt-2', id='actual-graph'
-            )
+            html.H3('Energy Consuption by Location',
+            className='mt-2'
+            ),
+            html.P(id="middle"),
         ]),
-        # html.H3('Energy Consuption at UNCG by Location', className='mt-2', id='actual-graph'),
         html.H6('Further description of graph.'),
         dbc.Row([
             dbc.Col(
@@ -63,7 +64,9 @@ app.layout = html.Div( children=[
                     dbc.CardBody([
                         html.H6('Aggregate Type'),
                         GraphOneComponents.radio_avg_total(),
+                        GraphOneComponents.aggregate_type_tooltip()
                         ],
+                        id='aggregate-select'
                     ),
                     className="mb-3",
                 ),
@@ -74,9 +77,10 @@ app.layout = html.Div( children=[
                 dbc.Card(
                     dbc.CardBody([
                         html.H6('Time Frame'),
-                        GraphOneComponents.radio_time()
+                        GraphOneComponents.radio_time(),
+                        GraphOneComponents.timeframe_tooltip()
                         ],
-                        # style={'padding': '12px'}
+                        id='timeframe-select'
                     ),
                     className="mb-3",
 
@@ -88,8 +92,9 @@ app.layout = html.Div( children=[
                     dbc.CardBody([
                         html.H6('Value Type'),
                         GraphOneComponents.radio_actual_pred(),
+                        GraphOneComponents.value_type_tooltip()
                         ],
-                        # style={'padding': '12px'}
+                        id='value-type'
                     ),
                     className="mb-3",
                 ),
@@ -111,9 +116,14 @@ app.layout = html.Div( children=[
                             options=locations,
                             value=filenames_labels[0]['filename'],
                             multi=True,
-                        )
-                    ]),
-                    style={'height': '100%'},
+
+                        ),
+                        GraphOneComponents.drop_down_tooltip()
+                    ],
+                    id='graph-1-dd',
+                    ),
+                    
+                    style={'height': '80%'},
                 ),
                 md=3
             ),
@@ -130,10 +140,12 @@ app.layout = html.Div( children=[
 
         ###############################################################################################
         ## GRAPH 2
+        # dbc.Container(html.Center(html.H3("Average Energy Consuption by Location", id='bottom', className = "mt-2"))),
         html.Span([
             html.H3('Average Energy Consuption by Location', 
-            className='mt-2', id='predicted-graph',
+            className='mt-2'
             ),
+            html.P(id="bottom"),
         ]),
         html.H6('Further description of graph.'),
 
@@ -169,7 +181,6 @@ app.layout = html.Div( children=[
                             ),
 
                         ]),
-
                     ],
                     style={'padding': '12px'}
                     ),
@@ -186,35 +197,39 @@ app.layout = html.Div( children=[
             dbc.Col(
                 dbc.Card(
                         dbc.CardBody([
+
                             html.H5('Select Location'),
                             html.P('Choose a location to view the average erergy usage.'),
-                            #    id='select-multi'),
                             html.P('Each location contains actual and predicted data.',
-                                   #    id='select-multi2',
                                    ),
                             dcc.Dropdown(
                                 id='building-names-pred',
                                 options=locations,
                                 value=filenames_labels[0]['filename'],
                                 multi=False,
-                            )
+
+                            ),
+                            GraphTwoComponents.dd_tooltip()
                         ]),
                         style={'height': '100%'},
+
                     ),
                     
                 md=3
             ),
             dbc.Col(
                 html.Div(id='predictive-graph-container', children=[
-                    dcc.Graph(
-                    )
+                    dcc.Graph(),
+                    GraphTwoComponents.graph_tooltip()
                 ]),
                 md=9
             )
         ]),
-    ])
+    ],
+    id='body'
+    )
 ],
-id='body'
+    id='head'
 )
 
 
