@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from datetime import date
 
+
 class GraphTwoComponents:
 
     @staticmethod
@@ -40,10 +41,10 @@ class GraphTwoComponents:
         return tt
 
     @staticmethod
-    def desc_tooltip():
+    def date_selector_tooltip():
         tt = dbc.Tooltip(
-            "Description of the average value graph.",
-            target="description-graph2",
+            "Select the time window you would like to view.",
+            target="date-selector",
         )
         return tt
 
@@ -67,8 +68,9 @@ class GraphTwoComponents:
     def date_picker():
         date_picker = dcc.DatePickerRange(
             id='date-picker-range',
-            min_date_allowed= date(2020, 1, 1),
-            max_date_allowed=date(2020, 11, 1), #find a way to get latest date
+            min_date_allowed=date(2020, 1, 1),
+            # find a way to get latest date
+            max_date_allowed=date(2020, 11, 1),
             initial_visible_month=date(2020, 1, 1),
             start_date=date(2020, 1, 1),
             end_date=date(2020, 11, 1)
