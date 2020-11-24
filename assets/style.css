@@ -42,3 +42,8 @@ h6 {
 .timeframe-graph2 {
     height: 50px;
 }
+
+.VirtualizedSelectOption {
+  overflow: hidden;
+  font-size: .8em;
+}
