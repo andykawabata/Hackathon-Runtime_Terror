@@ -1,6 +1,3 @@
-# Run this app with `python app.py` and
-# visit http://127.0.0.1:8050/ in your web browser.
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -11,7 +8,7 @@ from data_processing.label_mapper import LabelMapper
 from chart_builders import InteractiveMap
 import dash_bootstrap_components as dbc
 from layout.graph_one_components import GraphOneComponents
-from layout.graph_two_components import  GraphTwoComponents
+from layout.graph_two_components import GraphTwoComponents
 
 style1 = 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'
 style2 = 'styles/style.css'
@@ -31,30 +28,28 @@ for pair in filenames_labels:
 # Navigation bar
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("Map", href="#top")),
-        dbc.NavItem(dbc.NavLink("True Data Graph", href="#middle")),
-        dbc.NavItem(dbc.NavLink("Average Data Graph", href="#bottom")),
+        dbc.NavItem(dbc.NavLink("Home", href="#top")),
     ],
     brand="UNCG Energy Dashboard",
     brand_href="actual-graph",
     color="#0b1b3f",
     dark=True,
     id='nav-bar'
-    
+
 )
 
-app.layout = html.Div( children=[
+app.layout = html.Div(children=[
 
     navbar,
     # Html Definition for Interactive Plotly Graph
     dbc.Container([
-        
+
         ###############################################################################################
         ## GRAPH 1
         html.Span([
             html.H3('Energy Consuption by Location',
-            className='mt-2'
-            ),
+                    className='mt-2'
+                    ),
             html.P(id="middle"),
         ]),
         html.H6('Further description of graph.'),
@@ -65,25 +60,23 @@ app.layout = html.Div( children=[
                         html.H6('Aggregate Type'),
                         GraphOneComponents.radio_avg_total(),
                         GraphOneComponents.aggregate_type_tooltip()
-                        ],
+                    ],
                         id='aggregate-select'
                     ),
                     className="mb-3",
                 ),
                 md=3
-
-             ),
+            ),
             dbc.Col(
                 dbc.Card(
                     dbc.CardBody([
                         html.H6('Time Frame'),
                         GraphOneComponents.radio_time(),
                         GraphOneComponents.timeframe_tooltip()
-                        ],
+                    ],
                         id='timeframe-select'
                     ),
                     className="mb-3",
-
                 ),
                 md=5
             ),
@@ -93,7 +86,7 @@ app.layout = html.Div( children=[
                         html.H6('Value Type'),
                         GraphOneComponents.radio_actual_pred(),
                         GraphOneComponents.value_type_tooltip()
-                        ],
+                    ],
                         id='value-type'
                     ),
                     className="mb-3",
@@ -120,9 +113,9 @@ app.layout = html.Div( children=[
                         ),
                         GraphOneComponents.drop_down_tooltip()
                     ],
-                    id='graph-1-dd',
+                        id='graph-1-dd',
                     ),
-                    
+
                     style={'height': '100%'},
                 ),
                 md=3
@@ -137,14 +130,14 @@ app.layout = html.Div( children=[
         ]),
 
 
-        
+
         ###############################################################################################
         ## GRAPH 2
         # dbc.Container(html.Center(html.H3("Average Energy Consuption by Location", id='bottom', className = "mt-2"))),
         html.Span([
-            html.H3('Average Energy Consuption by Location', 
-            className='mt-2'
-            ),
+            html.H3('Average Energy Consuption by Location',
+                    className='mt-2'
+                    ),
             html.P(id="bottom"),
         ]),
         html.H6('Further description of graph.'),
@@ -161,7 +154,6 @@ app.layout = html.Div( children=[
                     ),
                     className="mb-3",
                     id='timeframe-graph2'
-
                 ),
                 md=4
             ),
@@ -171,50 +163,48 @@ app.layout = html.Div( children=[
                         dbc.Row([
                             dbc.Col([
                                 html.H6('Select Date Range')
-                                ], md=4
+                            ], md=4
                             ),
                             dbc.Col([
                                 GraphTwoComponents.date_picker(),
                                 GraphTwoComponents.date_selector_tooltip()
-                                ], 
-                            md=8,
-                            
+                            ],
+                                md=8,
+
                             ),
                         ]),
                     ],
-                    id='date-selector',
-                    style={'padding': '12px'}
+                        id='date-selector',
+                        style={'padding': '12px'}
                     ),
                     className="mb-3",
                     style={'padding': '12px'},
                 ),
                 md=8,
-                width = 18,
+                width=18,
             )
         ]),
-
         dbc.Row([
             dbc.Col(
                 dbc.Card(
-                        dbc.CardBody([
-
-                            html.H5('Select Location'),
-                            html.P('Choose a location to view the average erergy usage.'),
-                            html.P('Each location contains actual and predicted data.',
-                                   ),
-                            dcc.Dropdown(
-                                id='building-names-pred',
-                                options=locations,
-                                value=filenames_labels[0]['filename'],
-                                multi=False,
-                                optionHeight=50
-                            ),
-                            GraphTwoComponents.dd_tooltip()
-                        ]),
-                        style={'height': '100%'},
-                        id='drop-down-graph2',
-                    ),
-                    
+                    dbc.CardBody([
+                        html.H5('Select Location'),
+                        html.P(
+                            'Choose a location to view the average erergy usage.'),
+                        html.P('Each location contains actual and predicted data.',
+                               ),
+                        dcc.Dropdown(
+                            id='building-names-pred',
+                            options=locations,
+                            value=filenames_labels[0]['filename'],
+                            multi=False,
+                            optionHeight=50
+                        ),
+                        GraphTwoComponents.dd_tooltip()
+                    ]),
+                    style={'height': '100%'},
+                    id='drop-down-graph2',
+                ),
                 md=3
             ),
             dbc.Col(
@@ -226,9 +216,13 @@ app.layout = html.Div( children=[
             )
         ]),
     ],
-    id='body'
+        id='body'
     ),
     InteractiveMap.return_html_def_building_plot(),
+    html.Div([
+        html.P('Paid for by UNCG Green Fund'),
+    ],
+        style={'padding-left': '10%'})
 ],
     id='head'
 )
@@ -282,8 +276,10 @@ def update_output(filenames, time_select, avg_total, actual_predicted):
     if actual_predicted == 'predicted':
         is_predicted = True
 
-    graph = ActualPlot.build_graph(filenames, time_select, avg_total, is_predicted)
+    graph = ActualPlot.build_graph(
+        filenames, time_select, avg_total, is_predicted)
     return graph
+
 
 @app.callback(
     dash.dependencies.Output('predictive-graph-container', 'children'),
@@ -302,8 +298,10 @@ def update_output(filename, time_select_pred, start_date, end_date):
     """
 
     predictive_graph = PredictivePlot(filename[0], start_date, end_date)
-    graph = predictive_graph.create_graph2(Data().get_df_for_file(filename), time_select_pred)
+    graph = predictive_graph.create_graph2(
+        Data().get_df_for_file(filename), time_select_pred)
     return graph
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

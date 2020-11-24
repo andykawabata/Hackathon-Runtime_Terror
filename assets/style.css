@@ -1,8 +1,5 @@
 
 
-/* .header {
-    background-color: #c4c4c4;
-} */
 
 body {
     background-color: #ebebeb;
@@ -21,7 +18,10 @@ h6 {
     padding-top: 10px;
 }
 
-
+.bottomitem {
+    position: center;
+    padding-left: 10%;
+}
 
 .navbar {
     position: fixed;
