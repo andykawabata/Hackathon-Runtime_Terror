@@ -321,10 +321,10 @@ def update_output(filename, time_select_pred, start_date, end_date):
     :param time_select_pred: hourly, daily, weekly, monthly
     :return: a multi-line graph based on the inputs
     """
-
+    file_df = Data().get_df_for_file(filename)
     predictive_graph = PredictivePlot(filename, start_date, end_date)
     graph = predictive_graph.create_graph2(
-        Data().get_df_for_file(filename), time_select_pred)
+        file_df, time_select_pred)
     return graph
 
 
