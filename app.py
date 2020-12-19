@@ -18,6 +18,7 @@ style2 = 'styles/style.css'
 external_stylesheets = [style1, style2]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+server = app.server
 
 filenames_labels = LabelMapper.map_to_array()
 locations = []
